@@ -1,0 +1,73 @@
+---
+import { cva, type VariantProps } from "class-variance-authority"
+import type { HTMLAttributes } from "astro/types"
+
+import { cn } from "@/lib/utils"
+
+/**
+ * Renders an <a> when given `href`, a <button> otherwise — so a call to
+ * action that navigates stays a real link (middle-click, cmd-click and
+ * "copy link address" all keep working).
+ */
+const button = cva(
+  "inline-flex items-center justify-center gap-2 rounded-md font-medium whitespace-nowrap transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring disabled:pointer-events-none disabled:opacity-50",
+  {
+    variants: {
+      variant: {
+        primary: "bg-primary text-primary-foreground hover:opacity-90",
+        outline:
+          "border border-border bg-transparent hover:bg-accent hover:text-accent-foreground",
+        ghost: "bg-transparent hover:bg-accent hover:text-accent-foreground",
+      },
+      size: {
+        sm: "h-8 px-3 text-sm",
+        md: "h-10 px-4 text-sm",
+        lg: "h-12 px-6 text-base",
+        icon: "size-9",
+      },
+    },
+    defaultVariants: { variant: "primary", size: "md" },
+  }
+)
+
+/**
+ * Attributes come from Astro's `HTMLAttributes`, not a hand-written list.
+ * Enumerating them by hand meant finding each omission the hard way —
+ * `hreflang` only got added after a lint rule tripped over its absence.
+ *
+ * Anchor attributes are the base because they are the larger set; `type` and
+ * `disabled` are the only two a <button> adds. A discriminated union on
+ * `href` would be stricter, but it stops `type` being spread without casting
+ * the rest object, and the strictness it buys — stopping someone writing
+ * `hreflang` on a <button> — is not worth that.
+ */
+type Props = VariantProps<typeof button> &
+  HTMLAttributes<"a"> & {
+    /** When set, renders an <a>. Omit it and you get a <button>. */
+    href?: string | undefined
+    type?: "button" | "submit" | undefined
+    disabled?: boolean | undefined
+  }
+
+const {
+  href,
+  variant,
+  size,
+  class: className,
+  type = "button",
+  ...rest
+} = Astro.props
+const classes = cn(button({ variant, size }), className)
+---
+
+{
+  href ? (
+    <a href={href} class={classes} {...rest}>
+      <slot />
+    </a>
+  ) : (
+    <button type={type} class={classes} {...rest}>
+      <slot />
+    </button>
+  )
+}

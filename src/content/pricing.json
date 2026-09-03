@@ -1,0 +1,96 @@
+[
+  {
+    "id": "en-hobby",
+    "lang": "en",
+    "translationKey": "hobby",
+    "order": 0,
+    "name": "Hobby",
+    "monthly": 0,
+    "annual": 0,
+    "featured": false,
+    "features": [
+      "Unlimited personal projects",
+      "Preview URL per pull request",
+      "Community support"
+    ]
+  },
+  {
+    "id": "en-team",
+    "lang": "en",
+    "translationKey": "team",
+    "order": 1,
+    "name": "Team",
+    "monthly": 24,
+    "annual": 19,
+    "featured": true,
+    "features": [
+      "Everything in Hobby",
+      "Up to 20 collaborators",
+      "Instant rollback and release history",
+      "Email support within one business day"
+    ]
+  },
+  {
+    "id": "en-scale",
+    "lang": "en",
+    "translationKey": "scale",
+    "order": 2,
+    "name": "Scale",
+    "monthly": 79,
+    "annual": 65,
+    "featured": false,
+    "features": [
+      "Everything in Team",
+      "SAML single sign-on and audit log",
+      "Self-hosted build runners",
+      "99.95% uptime commitment"
+    ]
+  },
+  {
+    "id": "id-hobby",
+    "lang": "id",
+    "translationKey": "hobby",
+    "order": 0,
+    "name": "Hobi",
+    "monthly": 0,
+    "annual": 0,
+    "featured": false,
+    "features": [
+      "Proyek pribadi tanpa batas",
+      "URL pratinjau untuk tiap pull request",
+      "Dukungan komunitas"
+    ]
+  },
+  {
+    "id": "id-team",
+    "lang": "id",
+    "translationKey": "team",
+    "order": 1,
+    "name": "Tim",
+    "monthly": 24,
+    "annual": 19,
+    "featured": true,
+    "features": [
+      "Semua fitur paket Hobi",
+      "Hingga 20 kolaborator",
+      "Pemulihan instan dan riwayat rilis",
+      "Dukungan email dalam satu hari kerja"
+    ]
+  },
+  {
+    "id": "id-scale",
+    "lang": "id",
+    "translationKey": "scale",
+    "order": 2,
+    "name": "Skala",
+    "monthly": 79,
+    "annual": 65,
+    "featured": false,
+    "features": [
+      "Semua fitur paket Tim",
+      "SAML single sign-on dan log audit",
+      "Build runner mandiri",
+      "Komitmen uptime 99,95%"
+    ]
+  }
+]

@@ -1,0 +1,43 @@
+---
+lang: "id"
+translationKey: "shipping-on-fridays"
+title: "Rilis di Hari Jumat"
+description: "Larangan rilis hari Jumat sebenarnya menutupi proses pemulihan yang lambat. Perbaiki pemulihannya, dan aturan itu tak lagi dibutuhkan."
+pubDate: 2026-08-14
+updatedDate: 2026-08-22
+tags: ["proses", "deployment"]
+---
+
+Setiap tim yang melarang rilis di hari Jumat sedang mengatakan sesuatu yang
+jujur tentang infrastruktur mereka. Mereka tidak sedang bilang Jumat itu
+berbahaya. Mereka sedang bilang pemulihan berjalan lambat, dan Jumat adalah
+saat kelambatan itu paling terasa.
+
+## Aturan itu hanyalah gejala
+
+Pikirkan apa yang sebenarnya dilindungi aturan tersebut. Sebuah rilis
+bermasalah terlanjur keluar, lalu orang-orang yang memahaminya libur dua hari.
+Itu hanya menakutkan bila membatalkan rilis terasa sulit — harus mencari commit
+sebelumnya, membangunnya ulang, dan berharap build-nya konsisten.
+
+Kalau memulihkan rilis sebelumnya hanya butuh sembilan puluh detik tanpa build
+ulang, tanggal di kalender berhenti jadi masalah.
+
+## Yang sebaiknya diperbaiki
+
+- Simpan setiap rilis. Biaya penyimpanan lebih murah daripada satu akhir pekan.
+- Jadikan pemulihan satu perintah yang bisa dijalankan seluruh anggota tim.
+- Jangan pernah membuat pemulihan bergantung pada keberhasilan build ulang.
+
+[Buku Google SRE](https://sre.google/books/) menyampaikan argumen yang sama
+dengan jauh lebih panjang: kurangi biaya kegagalan, bukan frekuensi perubahan.
+Tim yang melakukannya berhenti menjadwalkan rilis berdasarkan rasa takut.
+
+## Versi jujurnya
+
+Sebagian rilis memang sebaiknya ditunda — migrasi basis data, perubahan pada
+penagihan, apa pun yang "batalkan"-nya bukan operasi nyata. Hal semacam itu
+layak dicermati di hari apa pun. Tapi larangan Jumat yang menyeluruh jarang
+soal itu. Ia soal tidak mempercayai tombolnya.
+
+Perbaiki tombolnya.

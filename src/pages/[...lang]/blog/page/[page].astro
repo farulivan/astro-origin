@@ -1,0 +1,64 @@
+---
+import type { InferGetStaticPropsType } from "astro"
+
+/**
+ * Pages 2..N only — page 1 lives at /blog so the canonical blog URL has no
+ * page number in it. Astro resolves this ahead of `blog/[slug]` because the
+ * static `page/` segment is more specific than a dynamic parameter.
+ */
+import Pagination from "@/components/Pagination.astro"
+import PostList from "@/components/sections/PostList.astro"
+import Container from "@/components/ui/Container.astro"
+import { siteConfig } from "@/config/site"
+import { getPostListItems } from "@/content/queries"
+import { LOCALES } from "@/content/schemas"
+import { langParam, localizePath, useTranslations } from "@/i18n/utils"
+import BaseLayout from "@/layouts/BaseLayout.astro"
+import { extraPageNumbers, paginate } from "@/lib/pagination"
+
+export async function getStaticPaths() {
+  const routes = []
+  for (const lang of LOCALES) {
+    const posts = await getPostListItems(lang)
+    for (const page of extraPageNumbers(
+      posts.length,
+      siteConfig.postsPerPage
+    )) {
+      routes.push({
+        params: { lang: langParam(lang), page: String(page) },
+        props: { lang, page },
+      })
+    }
+  }
+  return routes
+}
+
+type Props = InferGetStaticPropsType<typeof getStaticPaths>
+
+const { lang, page: pageNumber } = Astro.props
+const t = useTranslations(lang)
+
+const all = await getPostListItems(lang)
+const page = paginate(all, pageNumber, siteConfig.postsPerPage)
+---
+
+<BaseLayout
+  lang={lang}
+  path={`/blog/page/${page.current}`}
+  title={`${t("blog.title")} — ${t("pagination.status", { current: page.current, total: page.total })}`}
+  description={t("blog.subtitle")}
+>
+  <Container class="py-16">
+    <header class="mb-10 max-w-2xl">
+      <h1 class="text-4xl font-semibold tracking-tight">{t("blog.title")}</h1>
+      <p class="text-muted-foreground mt-3 text-pretty">{t("blog.subtitle")}</p>
+    </header>
+
+    <PostList
+      lang={lang}
+      posts={page.items}
+      hrefFor={(slug) => localizePath(`/blog/${slug}`, lang)}
+    />
+    <Pagination lang={lang} current={page.current} total={page.total} />
+  </Container>
+</BaseLayout>

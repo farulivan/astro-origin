@@ -1,0 +1,43 @@
+---
+import type { InferGetStaticPropsType } from "astro"
+
+import { render } from "astro:content"
+
+import { getPostRoutes } from "@/content/queries"
+import { langParam } from "@/i18n/utils"
+import PostLayout from "@/layouts/PostLayout.astro"
+
+export async function getStaticPaths() {
+  const routes = await getPostRoutes()
+  return routes.map(({ lang, slug, post }) => ({
+    params: { lang: langParam(lang), slug },
+    props: { lang, slug, post },
+  }))
+}
+
+type Props = InferGetStaticPropsType<typeof getStaticPaths>
+
+const { lang, slug, post } = Astro.props
+
+const { Content, remarkPluginFrontmatter } = await render(post.entry)
+
+const minutesRead = remarkPluginFrontmatter.minutesRead
+const lastModified = remarkPluginFrontmatter.lastModified
+---
+
+<PostLayout
+  lang={lang}
+  slug={slug}
+  title={post.entry.data.title}
+  description={post.entry.data.description}
+  pubDate={post.entry.data.pubDate}
+  updatedDate={post.entry.data.updatedDate}
+  lastModified={typeof lastModified === "string" ? lastModified : undefined}
+  minutesRead={typeof minutesRead === "number" ? minutesRead : undefined}
+  tags={post.entry.data.tags}
+  hero={post.entry.data.hero}
+  isFallback={post.isFallback}
+  availableLocales={post.availableLocales}
+>
+  <Content />
+</PostLayout>

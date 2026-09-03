@@ -1,0 +1,108 @@
+---
+/**
+ * Light / dark / system, cycled by one button. Deliberately not an island:
+ * this is a class toggle and a localStorage write, which needs no framework
+ * and no hydration. The React island in this project exists to demonstrate
+ * when a framework IS warranted — this is the counter-example.
+ *
+ * The choice is mirrored onto <html data-theme-choice>, so which icon shows
+ * is decided by CSS rather than by script touching the DOM.
+ */
+import { siteConfig } from "@/config/site"
+import type { Locale } from "@/content/schemas"
+import { useTranslations } from "@/i18n/utils"
+
+import Icon from "./ui/Icon.astro"
+
+interface Props {
+  lang: Locale
+}
+
+const t = useTranslations(Astro.props.lang)
+---
+
+<button
+  type="button"
+  id="theme-toggle"
+  class="text-muted-foreground hover:bg-accent hover:text-accent-foreground inline-flex size-9 items-center justify-center rounded-md transition-colors"
+  aria-label={t("theme.toggle")}
+  data-label-light={t("theme.light")}
+  data-label-dark={t("theme.dark")}
+  data-label-system={t("theme.system")}
+  data-storage-key={siteConfig.themeStorageKey}
+>
+  <Icon name="sun" class="size-4" data-theme-icon="light" />
+  <Icon name="moon" class="size-4" data-theme-icon="dark" />
+  <Icon name="monitor" class="size-4" data-theme-icon="system" />
+</button>
+
+<style is:global>
+  /* Only the icon matching the current choice is shown. Defined globally
+     because the selector reaches up to <html>, outside this component. */
+  [data-theme-icon] {
+    display: none;
+  }
+  html[data-theme-choice="light"] [data-theme-icon="light"],
+  html[data-theme-choice="dark"] [data-theme-icon="dark"],
+  html[data-theme-choice="system"] [data-theme-icon="system"] {
+    display: block;
+  }
+</style>
+
+<script>
+  type Choice = "light" | "dark" | "system"
+  const ORDER: Choice[] = ["light", "dark", "system"]
+
+  function setUp() {
+    const button = document.getElementById("theme-toggle")
+    if (!button) return
+
+    const storageKey = button.dataset.storageKey ?? "theme"
+
+    const labels: Record<Choice, string> = {
+      light: button.dataset.labelLight ?? "Light",
+      dark: button.dataset.labelDark ?? "Dark",
+      system: button.dataset.labelSystem ?? "System",
+    }
+
+    const prefersDark = window.matchMedia("(prefers-color-scheme: dark)")
+
+    function currentChoice(): Choice {
+      const stored = document.documentElement.dataset.themeChoice
+      return stored === "light" || stored === "dark" ? stored : "system"
+    }
+
+    function apply(choice: Choice) {
+      const isDark =
+        choice === "dark" || (choice === "system" && prefersDark.matches)
+      document.documentElement.classList.toggle("dark", isDark)
+      document.documentElement.dataset.themeChoice = choice
+
+      // The label names the CURRENT state; the icon shows it too, so the
+      // control is never color- or icon-only for a screen reader.
+      button!.setAttribute("aria-label", labels[choice])
+    }
+
+    button.addEventListener("click", () => {
+      const next = ORDER[(ORDER.indexOf(currentChoice()) + 1) % ORDER.length]!
+      try {
+        if (next === "system") localStorage.removeItem(storageKey)
+        else localStorage.setItem(storageKey, next)
+      } catch {
+        // Private mode or blocked storage: the choice still applies for this
+        // page view, it just will not be remembered.
+      }
+      apply(next)
+    })
+
+    // Follow the OS while the user is on "system".
+    prefersDark.addEventListener("change", () => {
+      if (currentChoice() === "system") apply("system")
+    })
+
+    apply(currentChoice())
+  }
+
+  setUp()
+  document.addEventListener("astro:after-swap", setUp)
+</script>

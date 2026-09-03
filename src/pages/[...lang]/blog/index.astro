@@ -1,0 +1,49 @@
+---
+import type { InferGetStaticPropsType } from "astro"
+
+import Pagination from "@/components/Pagination.astro"
+import PostList from "@/components/sections/PostList.astro"
+import Container from "@/components/ui/Container.astro"
+import { getPostListItems } from "@/content/queries"
+import { siteConfig } from "@/config/site"
+import { LOCALES } from "@/content/schemas"
+import { langParam, localizePath, useTranslations } from "@/i18n/utils"
+import BaseLayout from "@/layouts/BaseLayout.astro"
+import { paginate } from "@/lib/pagination"
+
+export function getStaticPaths() {
+  return LOCALES.map((lang) => ({
+    params: { lang: langParam(lang) },
+    props: { lang },
+  }))
+}
+
+type Props = InferGetStaticPropsType<typeof getStaticPaths>
+
+const { lang } = Astro.props
+const t = useTranslations(lang)
+
+const all = await getPostListItems(lang)
+const page = paginate(all, 1, siteConfig.postsPerPage)
+---
+
+<BaseLayout
+  lang={lang}
+  path="/blog"
+  title={t("blog.title")}
+  description={t("blog.subtitle")}
+>
+  <Container class="py-16">
+    <header class="mb-10 max-w-2xl">
+      <h1 class="text-4xl font-semibold tracking-tight">{t("blog.title")}</h1>
+      <p class="text-muted-foreground mt-3 text-pretty">{t("blog.subtitle")}</p>
+    </header>
+
+    <PostList
+      lang={lang}
+      posts={page.items}
+      hrefFor={(slug) => localizePath(`/blog/${slug}`, lang)}
+    />
+    <Pagination lang={lang} current={page.current} total={page.total} />
+  </Container>
+</BaseLayout>

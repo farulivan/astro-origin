@@ -1,0 +1,90 @@
+---
+import { Font } from "astro:assets"
+
+import Footer from "@/components/Footer.astro"
+import Header from "@/components/Header.astro"
+import Seo from "@/components/Seo.astro"
+import { siteConfig } from "@/config/site"
+import { LOCALE_TAGS, type Locale } from "@/content/schemas"
+import { localizePath, useTranslations } from "@/i18n/utils"
+import "@/styles/global.css"
+
+interface Props {
+  title: string
+  description: string
+  lang: Locale
+  /** Locale-less path, e.g. "/blog/my-post". Drives canonical + hreflang. */
+  path: string
+  availableLocales?: readonly Locale[]
+  image?: string
+  type?: "website" | "article"
+  publishedTime?: Date
+  modifiedTime?: Date
+  tags?: readonly string[]
+}
+
+const { lang, path, ...seo } = Astro.props
+const t = useTranslations(lang)
+---
+
+<!doctype html>
+<html lang={LOCALE_TAGS[lang]} data-theme-choice="system">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <meta name="generator" content={Astro.generator} />
+
+    <!--
+      Blocking and inline, before anything paints. Deferring this — an external
+      file, `defer`, or an Astro <script> — guarantees a flash of the wrong
+      theme, because the browser would paint the default before the class
+      lands. This is the one place inline script is the correct answer.
+    -->
+    <script is:inline define:vars={{ storageKey: siteConfig.themeStorageKey }}>
+      const stored = (() => {
+        try {
+          return localStorage.getItem(storageKey)
+        } catch {
+          return null
+        }
+      })()
+      const choice = stored === "light" || stored === "dark" ? stored : "system"
+      const isDark =
+        choice === "dark" ||
+        (choice === "system" &&
+          window.matchMedia("(prefers-color-scheme: dark)").matches)
+      document.documentElement.classList.toggle("dark", isDark)
+      document.documentElement.dataset.themeChoice = choice
+    </script>
+
+    <Font cssVariable="--font-geist" preload />
+    <Font cssVariable="--font-geist-mono" />
+
+    <Seo lang={lang} path={path} {...seo} />
+
+    <link
+      rel="alternate"
+      type="application/rss+xml"
+      title={`${siteConfig.name} — ${t("blog.title")}`}
+      href={new URL(localizePath("/rss.xml", lang), Astro.site).href}
+    />
+  </head>
+
+  <body class="min-h-svh">
+    <a
+      href="#main"
+      class="bg-primary text-primary-foreground sr-only rounded-md px-3 py-2 focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-50"
+    >
+      {t("a11y.skipToContent")}
+    </a>
+
+    <Header lang={lang} path={path} />
+
+    <main id="main">
+      <slot />
+    </main>
+
+    <Footer lang={lang} />
+  </body>
+</html>

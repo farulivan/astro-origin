@@ -1,0 +1,59 @@
+---
+import { siteConfig } from "@/config/site"
+import type { Locale } from "@/content/schemas"
+import { localizePath, useTranslations } from "@/i18n/utils"
+
+import Container from "./ui/Container.astro"
+
+interface Props {
+  lang: Locale
+}
+
+const { lang } = Astro.props
+const t = useTranslations(lang)
+const year = new Date().getFullYear()
+
+/**
+ * Only genuinely off-site links get the new-tab treatment. While the social
+ * entries are "/#" placeholders they stay ordinary internal links, so the
+ * screen-reader note never promises a new tab that will not open.
+ */
+const isExternal = (href: string) => /^https?:\/\//.test(href)
+const githubHref = siteConfig.social.github
+---
+
+<footer class="border-border mt-24 border-t py-10">
+  <Container
+    class="text-muted-foreground flex flex-col items-center justify-between gap-4 text-sm sm:flex-row"
+  >
+    <p>{t("footer.rights", { year })}</p>
+
+    <div class="flex items-center gap-4">
+      <a
+        href={githubHref}
+        rel={isExternal(githubHref) ? "noopener noreferrer" : undefined}
+        target={isExternal(githubHref) ? "_blank" : undefined}
+        class="hover:text-foreground transition-colors"
+      >
+        GitHub{
+          isExternal(githubHref) && (
+            <span class="sr-only"> {t("a11y.externalLink")}</span>
+          )
+        }
+      </a>
+      <a
+        href={localizePath("/blog", lang)}
+        class="hover:text-foreground transition-colors"
+      >
+        {t("nav.blog")}
+      </a>
+      <a
+        href={localizePath("/rss.xml", lang)}
+        class="hover:text-foreground transition-colors"
+      >
+        RSS
+      </a>
+      <span>{t("footer.builtWith")}</span>
+    </div>
+  </Container>
+</footer>

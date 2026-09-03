@@ -1,0 +1,97 @@
+---
+import type { InferGetStaticPropsType } from "astro"
+
+/**
+ * The landing page. This is the only file in the section stack that talks to
+ * the content layer: it queries each collection for the active locale and
+ * hands plain props down. Sections stay renderable without a build, and the
+ * "where does data come from" question has exactly one answer per page.
+ */
+import { getCollection } from "astro:content"
+
+import type { PricingTier } from "@/components/islands/PricingToggle"
+import Cta from "@/components/sections/Cta.astro"
+import Faq from "@/components/sections/Faq.astro"
+import Features from "@/components/sections/Features.astro"
+import Hero from "@/components/sections/Hero.astro"
+import Pricing from "@/components/sections/Pricing.astro"
+import Testimonials from "@/components/sections/Testimonials.astro"
+import { siteConfig } from "@/config/site"
+import { LOCALES } from "@/content/schemas"
+import { langParam, useTranslations } from "@/i18n/utils"
+import BaseLayout from "@/layouts/BaseLayout.astro"
+import { formatPrice } from "@/lib/format"
+
+export function getStaticPaths() {
+  // `langParam` yields undefined for the default locale, which is what makes
+  // the rest parameter emit "/" rather than "/en/".
+  return LOCALES.map((lang) => ({
+    params: { lang: langParam(lang) },
+    props: { lang },
+  }))
+}
+
+type Props = InferGetStaticPropsType<typeof getStaticPaths>
+
+const { lang } = Astro.props
+const t = useTranslations(lang)
+
+const byOrder = <T extends { data: { order: number } }>(a: T, b: T) =>
+  a.data.order - b.data.order
+
+const features = (
+  await getCollection("features", (entry) => entry.data.lang === lang)
+)
+  .sort(byOrder)
+  .map(({ data }) => ({
+    title: data.title,
+    description: data.description,
+    icon: data.icon,
+  }))
+
+const testimonials = (
+  await getCollection("testimonials", (entry) => entry.data.lang === lang)
+).map(({ data }) => ({
+  author: data.author,
+  role: data.role,
+  quote: data.quote,
+}))
+
+const faq = (await getCollection("faq", (entry) => entry.data.lang === lang))
+  .sort(byOrder)
+  .map(({ data }) => ({ question: data.question, answer: data.answer }))
+
+/**
+ * Prices are formatted here, server-side, so the island receives strings and
+ * no Intl logic reaches the browser — and `formatPrice` stays the single
+ * place that decides how money is rendered.
+ */
+const tiers: PricingTier[] = (
+  await getCollection("pricing", (entry) => entry.data.lang === lang)
+)
+  .sort(byOrder)
+  .map(({ data }) => ({
+    name: data.name,
+    monthlyLabel: formatPrice(data.monthly, lang),
+    annualLabel: formatPrice(data.annual, lang),
+    isFree: data.monthly === 0,
+    featured: data.featured,
+    features: data.features,
+    ctaLabel: t("pricing.cta", { plan: data.name }),
+    ctaHref: siteConfig.signupUrl,
+  }))
+---
+
+<BaseLayout
+  lang={lang}
+  path="/"
+  title={t("hero.title")}
+  description={t("hero.subtitle")}
+>
+  <Hero lang={lang} />
+  <Features lang={lang} items={features} />
+  <Pricing lang={lang} tiers={tiers} />
+  <Testimonials lang={lang} items={testimonials} />
+  <Faq lang={lang} items={faq} />
+  <Cta lang={lang} />
+</BaseLayout>

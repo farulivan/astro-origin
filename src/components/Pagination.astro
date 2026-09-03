@@ -1,0 +1,59 @@
+---
+import Icon from "@/components/ui/Icon.astro"
+import type { Locale } from "@/content/schemas"
+import { useTranslations } from "@/i18n/utils"
+import { blogPageHref } from "@/lib/pagination"
+
+interface Props {
+  lang: Locale
+  current: number
+  total: number
+}
+
+const { lang, current, total } = Astro.props
+const t = useTranslations(lang)
+
+const link =
+  "inline-flex h-9 items-center gap-1.5 rounded-md border border-border px-3 text-sm transition-colors hover:bg-accent hover:text-accent-foreground"
+
+const hasPrev = current > 1
+const hasNext = current < total
+---
+
+{
+  total > 1 && (
+    <nav
+      aria-label={t("pagination.label")}
+      class="mt-10 flex items-center justify-between gap-4"
+    >
+      {/*
+        At the ends of the range the control is omitted entirely rather than
+        dimmed. An <a> without href is not a link at all — invisible to
+        keyboards and crawlers — and a greyed-out label bright enough to read
+        cannot also look disabled: the contrast floor and the visual cue pull
+        in opposite directions. The empty span preserves the layout.
+      */}
+      {hasPrev ? (
+        <a href={blogPageHref(lang, current - 1)} rel="prev" class={link}>
+          <Icon name="chevronLeft" class="size-4" />
+          {t("pagination.previous")}
+        </a>
+      ) : (
+        <span />
+      )}
+
+      <span class="text-muted-foreground text-sm tabular-nums">
+        {t("pagination.status", { current, total })}
+      </span>
+
+      {hasNext ? (
+        <a href={blogPageHref(lang, current + 1)} rel="next" class={link}>
+          {t("pagination.next")}
+          <Icon name="chevronRight" class="size-4" />
+        </a>
+      ) : (
+        <span />
+      )}
+    </nav>
+  )
+}

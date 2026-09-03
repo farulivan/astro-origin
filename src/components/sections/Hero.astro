@@ -1,0 +1,44 @@
+---
+import Badge from "@/components/ui/Badge.astro"
+import Button from "@/components/ui/Button.astro"
+import Container from "@/components/ui/Container.astro"
+import Icon from "@/components/ui/Icon.astro"
+import type { Locale } from "@/content/schemas"
+import { localizePath, useTranslations } from "@/i18n/utils"
+
+interface Props {
+  lang: Locale
+}
+
+const { lang } = Astro.props
+const t = useTranslations(lang)
+---
+
+<Container tag="section" class="py-20 sm:py-28">
+  <div class="mx-auto max-w-3xl text-center">
+    <Badge class="bg-accent/60 mb-5 gap-1.5">
+      <span class="bg-primary size-1.5 rounded-full" aria-hidden="true"></span>
+      {t("hero.eyebrow")}
+    </Badge>
+
+    <h1
+      class="text-4xl font-semibold tracking-tight text-balance sm:text-5xl lg:text-6xl"
+    >
+      {t("hero.title")}
+    </h1>
+
+    <p class="text-muted-foreground mx-auto mt-6 max-w-2xl text-lg text-pretty">
+      {t("hero.subtitle")}
+    </p>
+
+    <div class="mt-9 flex flex-col justify-center gap-3 sm:flex-row">
+      <Button href={localizePath("/#pricing", lang)} size="lg">
+        {t("hero.ctaPrimary")}
+        <Icon name="arrowRight" class="size-4" />
+      </Button>
+      <Button href={localizePath("/blog", lang)} size="lg" variant="outline">
+        {t("hero.ctaSecondary")}
+      </Button>
+    </div>
+  </div>
+</Container>

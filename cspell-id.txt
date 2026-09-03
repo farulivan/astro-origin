@@ -1,0 +1,13 @@
+# Indonesian words the base dictionary lacks — mostly affixed forms
+# (-nya, di-, ter-) that appear in translated UI copy and content.
+# Translators extend this file rather than cspell.json.
+animasinya
+deskripsinya
+dicermati
+ditelusuri
+fiturnya
+kodenya
+migrasinya
+produknya
+tersendat
+tombolnya

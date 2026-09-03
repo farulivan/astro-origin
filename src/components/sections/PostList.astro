@@ -1,0 +1,70 @@
+---
+import Card from "@/components/ui/Card.astro"
+import type { PostListItem } from "@/content/queries"
+import type { Locale } from "@/content/schemas"
+import { useTranslations } from "@/i18n/utils"
+import { formatDateShort, toDateAttribute } from "@/lib/format"
+
+interface Props {
+  lang: Locale
+  posts: readonly PostListItem[]
+  /** Builds a post URL; supplied by the page so this stays route-agnostic. */
+  hrefFor: (slug: string) => string
+}
+
+const { lang, posts, hrefFor } = Astro.props
+const t = useTranslations(lang)
+---
+
+{
+  posts.length === 0 ? (
+    <p class="text-muted-foreground py-16 text-center">{t("blog.empty")}</p>
+  ) : (
+    <ul class="grid gap-4 sm:grid-cols-2">
+      {posts.map((post) => (
+        <Card
+          tag="li"
+          class="hover:border-ring/50 relative flex flex-col transition-colors"
+        >
+          <div class="text-muted-foreground flex items-center gap-2 text-xs">
+            <time datetime={toDateAttribute(post.date)}>
+              {formatDateShort(post.date, lang)}
+            </time>
+            {post.minutesRead !== undefined && (
+              <>
+                <span aria-hidden="true">·</span>
+                <span>
+                  {t("blog.readingTime", { minutes: post.minutesRead })}
+                </span>
+              </>
+            )}
+          </div>
+
+          <h2 class="mt-2 text-lg font-medium tracking-tight">
+            {/* The overlay makes the whole card clickable while the anchor
+                stays on the title, so the link text is meaningful out of
+                context. `relative` must sit on the Card itself: a scoped rule
+                here cannot reach an element another component renders. */}
+            <a href={hrefFor(post.slug)} class="after:absolute after:inset-0">
+              {post.title}
+            </a>
+          </h2>
+
+          <p class="text-muted-foreground mt-2 flex-1 text-sm text-pretty">
+            {post.description}
+          </p>
+
+          {post.tags.length > 0 && (
+            <ul class="mt-4 flex flex-wrap gap-1.5">
+              {post.tags.map((tag) => (
+                <li class="bg-accent text-muted-foreground rounded-full px-2 py-0.5 text-xs">
+                  {tag}
+                </li>
+              ))}
+            </ul>
+          )}
+        </Card>
+      ))}
+    </ul>
+  )
+}

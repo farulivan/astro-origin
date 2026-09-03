@@ -1,0 +1,15 @@
+{
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.formatOnSave": true,
+  "editor.codeActionsOnSave": { "source.fixAll.eslint": "explicit" },
+  "[astro]": { "editor.defaultFormatter": "esbenp.prettier-vscode" },
+  "eslint.validate": ["javascript", "typescript", "typescriptreact", "astro"],
+  // Tailwind v4 keeps its config in CSS, so the extension needs pointing at it.
+  "tailwindCSS.experimental.configFile": "src/styles/global.css",
+  // cn() and cva() compose class strings; without this they get no completions.
+  "tailwindCSS.experimental.classRegex": [
+    ["cva\\(([^)]*)\\)", "[\"'`]([^\"'`]*).*?[\"'`]"],
+    ["cn\\(([^)]*)\\)", "[\"'`]([^\"'`]*).*?[\"'`]"]
+  ],
+  "files.associations": { "*.css": "tailwindcss" }
+}

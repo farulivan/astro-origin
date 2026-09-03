@@ -1,0 +1,49 @@
+---
+lang: "id"
+translationKey: "preview-urls"
+title: "URL Pratinjau Mengubah Cara Tinjauan Bekerja"
+description: "Diff memberi tahu apa yang berubah pada kode. URL pratinjau memberi tahu apa yang berubah bagi penggunanya — pertanyaan yang sama sekali berbeda."
+pubDate: 2026-07-02
+tags: ["tinjauan", "kolaborasi"]
+---
+
+Tinjauan kode punya titik buta lama: peninjau membaca diff lalu membayangkan
+hasilnya. Cara itu cukup untuk logika, tetapi runtuh untuk antarmuka, karena
+yang sedang diubah adalah pengalaman, bukan sekadar nilai.
+
+## Yang tidak bisa ditunjukkan sebuah diff
+
+Diff tidak bisa menunjukkan bahwa tombolnya kini berada di bawah layar pada
+laptop, bahwa kalimat pada empty state terasa janggal di bahasa kedua, atau
+bahwa animasinya tersendat di ponsel kelas menengah. Peninjau menyetujui
+perubahan itu bukan karena sudah memeriksa, melainkan karena kodenya tampak
+masuk akal.
+
+## Beri setiap branch sebuah alamat
+
+Ketika tiap pull request punya URL sendiri, pertanyaan tinjauan berubah dari
+"apakah kode ini terlihat benar" menjadi "apakah ini perilaku yang kita mau".
+Desainer bisa ikut tanpa menyiapkan lingkungan lokal. Tim dukungan bisa
+memverifikasi perbaikan sebelum dirilis. Tidak ada yang perlu menjalankan
+`git checkout` hanya untuk berpendapat.
+
+```bash
+# yang dulu harus dilakukan peninjau
+git fetch origin pull/482/head:review-482
+git checkout review-482
+pnpm install && pnpm dev
+```
+
+Empat perintah dan beberapa menit yang memisahkan seorang rekan dari pendapat
+yang berguna. Kebanyakan orang, pada kebanyakan waktu, akan melewatinya dan
+langsung menyetujui.
+
+## Efek lanjutannya
+
+Perubahan yang menarik bukanlah tinjauan yang lebih cepat, melainkan _siapa_
+yang meninjau. Begitu melihat perubahan hanya butuh satu klik, orang-orang
+dengan penilaian paling relevan — desainer, penulis, orang yang menjawab kotak
+masuk dukungan — mulai muncul di pull request yang sebelumnya tak mereka
+sentuh.
+
+Itu jauh lebih berharga daripada waktu yang dihemat.

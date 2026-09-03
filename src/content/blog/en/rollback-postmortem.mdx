@@ -1,0 +1,43 @@
+---
+lang: "en"
+translationKey: "rollback-postmortem"
+title: "Ninety Seconds: A Rollback Postmortem"
+description: "A bad release reached production on a Tuesday afternoon. This is what the ninety seconds that followed actually looked like, minute by minute."
+pubDate: 2026-06-09
+tags: ["incident", "deployment"]
+---
+
+This post is intentionally available only in English, so the language picker
+has an untranslated case to demonstrate. Visiting it under another locale
+falls back to this version and says so, rather than returning a 404.
+
+## What happened
+
+A configuration change altered which cache key the pricing page used. Every
+visitor got the same rendered page, which was fine, except the page contained
+a currency chosen at request time. Visitors outside the United States saw
+dollars.
+
+No error was raised. Nothing crashed. The build was green.
+
+## The ninety seconds
+
+**14:22** — A support message arrives: "why is this in USD?"
+
+**14:23** — The release is identified from the dashboard, sitting at the top
+of the history with the commit message and author attached.
+
+**14:23** — Rollback. The previous release is already built and stored, so
+there is nothing to compile and nothing to wait for.
+
+**14:24** — Confirmed fixed. Total customer-visible impact: under two minutes.
+
+## What we changed afterwards
+
+Not the deploy process — that worked exactly as intended. We changed the
+caching logic to make request-time values structurally impossible to cache,
+which is the actual bug.
+
+The lesson we keep relearning: a fast rollback does not prevent incidents. It
+converts them from outages into inconveniences, which buys you the calm needed
+to fix the real cause properly instead of at speed.

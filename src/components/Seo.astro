@@ -1,0 +1,148 @@
+---
+/**
+ * Every head tag that search engines and social cards read, in one typed
+ * place. Hand-written rather than pulled from a package for the same reason
+ * the sibling project vendors its UI components: this is a dozen tags whose
+ * exact contents matter, and owning them beats configuring someone else's.
+ */
+import { siteConfig } from "@/config/site"
+import { DEFAULT_LOCALE, LOCALE_TAGS, type Locale } from "@/content/schemas"
+import { localizePath } from "@/i18n/utils"
+
+interface Props {
+  title: string
+  description: string
+  lang: Locale
+  /**
+   * Path without a locale prefix, e.g. "/blog/my-post". Alternates for every
+   * other locale are derived from it, which is why it must not be prefixed.
+   */
+  path: string
+  /** Locales this page actually exists in; drives the hreflang set. */
+  availableLocales?: readonly Locale[]
+  image?: string
+  type?: "website" | "article"
+  publishedTime?: Date
+  modifiedTime?: Date
+  tags?: readonly string[]
+  noindex?: boolean
+}
+
+const {
+  title,
+  description,
+  lang,
+  path,
+  availableLocales = [DEFAULT_LOCALE, "id"] as const,
+  image = siteConfig.ogImage,
+  type = "website",
+  publishedTime,
+  modifiedTime,
+  tags = [],
+  noindex = false,
+} = Astro.props
+
+const absolute = (p: string) => new URL(p, Astro.site ?? siteConfig.url).href
+
+const canonical = absolute(localizePath(path, lang))
+const imageUrl = absolute(image)
+const fullTitle =
+  path === "/"
+    ? `${siteConfig.name} — ${title}`
+    : `${title} · ${siteConfig.name}`
+
+const alternates = availableLocales.map((locale) => ({
+  hreflang: LOCALE_TAGS[locale],
+  href: absolute(localizePath(path, locale)),
+}))
+
+const structuredData =
+  type === "article"
+    ? {
+        "@context": "https://schema.org",
+        "@type": "BlogPosting",
+        headline: title,
+        description,
+        image: imageUrl,
+        inLanguage: LOCALE_TAGS[lang],
+        datePublished: publishedTime?.toISOString(),
+        dateModified: (modifiedTime ?? publishedTime)?.toISOString(),
+        keywords: tags.join(", ") || undefined,
+        publisher: { "@type": "Organization", name: siteConfig.name },
+        mainEntityOfPage: { "@type": "WebPage", "@id": canonical },
+      }
+    : {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        name: siteConfig.name,
+        description,
+        url: absolute("/"),
+        inLanguage: LOCALE_TAGS[lang],
+      }
+---
+
+<title>{fullTitle}</title>
+<meta name="description" content={description} />
+<link rel="canonical" href={canonical} />
+{noindex && <meta name="robots" content="noindex, nofollow" />}
+
+{
+  alternates.map(({ hreflang, href }) => (
+    <link rel="alternate" hreflang={hreflang} href={href} />
+  ))
+}
+{
+  /* x-default tells search engines which version to show an unmatched visitor. */
+}
+<link
+  rel="alternate"
+  hreflang="x-default"
+  href={absolute(localizePath(path, DEFAULT_LOCALE))}
+/>
+
+<meta property="og:type" content={type} />
+<meta property="og:title" content={title} />
+<meta property="og:description" content={description} />
+<meta property="og:url" content={canonical} />
+<meta property="og:image" content={imageUrl} />
+<meta property="og:site_name" content={siteConfig.name} />
+<meta property="og:locale" content={LOCALE_TAGS[lang].replace("-", "_")} />
+{
+  availableLocales
+    .filter((locale) => locale !== lang)
+    .map((locale) => (
+      <meta
+        property="og:locale:alternate"
+        content={LOCALE_TAGS[locale].replace("-", "_")}
+      />
+    ))
+}
+
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:site" content={`@${siteConfig.twitterHandle}`} />
+<meta name="twitter:title" content={title} />
+<meta name="twitter:description" content={description} />
+<meta name="twitter:image" content={imageUrl} />
+
+{
+  type === "article" && publishedTime && (
+    <meta
+      property="article:published_time"
+      content={publishedTime.toISOString()}
+    />
+  )
+}
+{
+  type === "article" && modifiedTime && (
+    <meta
+      property="article:modified_time"
+      content={modifiedTime.toISOString()}
+    />
+  )
+}
+
+<script
+  type="application/ld+json"
+  is:inline
+  set:html={JSON.stringify(structuredData)}
+/>

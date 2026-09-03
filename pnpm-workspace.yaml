@@ -1,0 +1,6 @@
+# pnpm 11 refuses to run a dependency's install scripts unless it is approved
+# here (strictDepBuilds). Both of these genuinely need theirs: esbuild fetches
+# its native binary, sharp its libvips bindings for image optimization.
+allowBuilds:
+  esbuild: true
+  sharp: true

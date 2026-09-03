@@ -1,0 +1,47 @@
+---
+import Card from "@/components/ui/Card.astro"
+import Container from "@/components/ui/Container.astro"
+import type { Locale } from "@/content/schemas"
+import { useTranslations } from "@/i18n/utils"
+
+export interface TestimonialItem {
+  author: string
+  role: string
+  quote: string
+}
+
+interface Props {
+  lang: Locale
+  items: readonly TestimonialItem[]
+}
+
+const { lang, items } = Astro.props
+const t = useTranslations(lang)
+---
+
+<Container tag="section" class="py-16 sm:py-24">
+  <div class="mx-auto max-w-2xl text-center">
+    <h2 class="text-3xl font-semibold tracking-tight sm:text-4xl">
+      {t("testimonials.title")}
+    </h2>
+    <p class="text-muted-foreground mt-4 text-pretty">
+      {t("testimonials.subtitle")}
+    </p>
+  </div>
+
+  <ul class="mt-12 grid gap-4 md:grid-cols-3">
+    {
+      items.map((item) => (
+        <Card tag="li" class="flex flex-col">
+          <blockquote class="flex-1 text-sm leading-relaxed text-pretty">
+            “{item.quote}”
+          </blockquote>
+          <footer class="border-border mt-5 border-t pt-4 text-sm">
+            <div class="font-medium">{item.author}</div>
+            <div class="text-muted-foreground">{item.role}</div>
+          </footer>
+        </Card>
+      ))
+    }
+  </ul>
+</Container>

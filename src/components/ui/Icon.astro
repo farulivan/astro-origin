@@ -1,0 +1,75 @@
+---
+/**
+ * Inline SVG registry. Icons are markup, not a dependency: a landing page
+ * needs a dozen of them, and an icon package would ship a runtime (or a build
+ * step) to solve a problem that a typed record already solves.
+ *
+ * The `_assertFeatureIconsExist` line below makes this registry and the
+ * `icon` enum in the content schema impossible to drift apart — adding an
+ * icon name to the schema without drawing it here is a compile error.
+ */
+import type { HTMLAttributes } from "astro/types"
+
+import type { FeatureIconName } from "@/content/schemas"
+
+const ICONS = {
+  // Feature icons — these names are mirrored in featureSchema.
+  zap: '<path d="M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z"/>',
+  shield:
+    '<path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/>',
+  globe:
+    '<circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/>',
+  sparkles:
+    '<path d="M9.94 15.5A2 2 0 0 0 8.5 14.06l-6.14-1.58a.5.5 0 0 1 0-.96L8.5 9.94A2 2 0 0 0 9.94 8.5l1.58-6.14a.5.5 0 0 1 .96 0L14.06 8.5A2 2 0 0 0 15.5 9.94l6.14 1.58a.5.5 0 0 1 0 .96L15.5 14.06a2 2 0 0 0-1.44 1.44l-1.58 6.14a.5.5 0 0 1-.96 0z"/>',
+  gauge: '<path d="m12 14 4-4"/><path d="M3.34 19a10 10 0 1 1 17.32 0"/>',
+  layers:
+    '<path d="M12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83Z"/><path d="m22 17.65-9.17 4.16a2 2 0 0 1-1.66 0L2 17.65"/><path d="m22 12.65-9.17 4.16a2 2 0 0 1-1.66 0L2 12.65"/>',
+
+  // Interface icons.
+  menu: '<path d="M4 6h16"/><path d="M4 12h16"/><path d="M4 18h16"/>',
+  close: '<path d="M18 6 6 18"/><path d="m6 6 12 12"/>',
+  sun: '<circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/>',
+  moon: '<path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/>',
+  monitor:
+    '<rect width="20" height="14" x="2" y="3" rx="2"/><path d="M8 21h8"/><path d="M12 17v4"/>',
+  check: '<path d="M20 6 9 17l-5-5"/>',
+  chevronLeft: '<path d="m15 18-6-6 6-6"/>',
+  chevronRight: '<path d="m9 18 6-6-6-6"/>',
+  arrowRight: '<path d="M5 12h14"/><path d="m12 5 7 7-7 7"/>',
+} as const
+
+export type IconName = keyof typeof ICONS
+
+/** Compile-time guarantee that every schema icon has a drawing. */
+const _assertFeatureIconsExist: Record<FeatureIconName, string> = ICONS
+void _assertFeatureIconsExist
+
+/**
+ * Extends the SVG attributes rather than listing a few by hand: callers pass
+ * `data-*` hooks (the theme toggle keys its icon swapping off one), and an
+ * attribute this component silently swallowed would fail invisibly.
+ */
+type Props = HTMLAttributes<"svg"> & {
+  name: IconName
+  /** Set a label only for a standalone icon; decorative ones stay hidden. */
+  label?: string
+}
+
+const { name, class: className, label, ...rest } = Astro.props
+---
+
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="2"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+  class={className}
+  role={label ? "img" : undefined}
+  aria-label={label}
+  aria-hidden={label ? undefined : "true"}
+  {...rest}
+  set:html={ICONS[name]}
+/>

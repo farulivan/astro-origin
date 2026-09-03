@@ -1,0 +1,42 @@
+---
+lang: "en"
+translationKey: "shipping-on-fridays"
+title: "Ship on Fridays"
+description: "The rule against Friday deploys is a workaround for slow rollbacks. Fix the rollback and the rule stops being necessary."
+pubDate: 2026-08-14
+updatedDate: 2026-08-22
+tags: ["process", "deployment"]
+---
+
+Every team that bans Friday deploys is telling you something true about their
+infrastructure. They are not saying Friday is dangerous. They are saying
+recovery is slow, and Friday is when slow recovery hurts most.
+
+## The rule is a symptom
+
+Consider what the rule actually protects against. A bad release goes out, and
+the people who understand it are gone for two days. That is only frightening
+when undoing the release is hard — when it means finding the previous commit,
+rebuilding it, and hoping the build is reproducible.
+
+If restoring the previous release takes ninety seconds and no build, the
+calendar stops mattering.
+
+## What to fix instead
+
+- Keep every release. Storage is cheaper than a weekend.
+- Make rollback a single command, available to everyone on the team.
+- Never make recovery depend on a rebuild succeeding.
+
+The [Google SRE book](https://sre.google/books/) makes the same argument at
+much greater length: reduce the cost of failure rather than the frequency of
+change. Teams that do this stop scheduling deploys around their fears.
+
+## The honest version
+
+Some releases genuinely should wait — a database migration, a change to
+billing, anything where "undo" is not a real operation. Those deserve care on
+any day of the week. But the blanket Friday rule is rarely about those. It is
+about not trusting the button.
+
+Fix the button.

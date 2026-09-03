@@ -1,0 +1,45 @@
+---
+lang: "en"
+translationKey: "preview-urls"
+title: "Preview URLs Change How Reviews Work"
+description: "A diff tells you what changed in the code. A preview URL tells you what changed for the person using it — a different question entirely."
+pubDate: 2026-07-02
+tags: ["review", "collaboration"]
+---
+
+Code review has an old blind spot: reviewers read the diff and imagine the
+result. That works for logic and falls apart for interfaces, where the thing
+being changed is an experience rather than a value.
+
+## What a diff cannot show you
+
+A diff cannot show you that the button is now below the fold on a laptop, that
+the empty state reads oddly in the second language, or that the animation
+stutters on a mid-range phone. Reviewers approve these changes not because they
+checked, but because the code looked reasonable.
+
+## Give every branch an address
+
+When each pull request has its own URL, the review question changes from "does
+this code look right" to "is this the behavior we want". Designers can
+participate without a local environment. Support can verify the fix before it
+ships. Nobody has to run `git checkout` to have an opinion.
+
+```bash
+# what a reviewer used to do
+git fetch origin pull/482/head:review-482
+git checkout review-482
+pnpm install && pnpm dev
+```
+
+That is four commands and a few minutes standing between a colleague and a
+useful opinion. Most people, most of the time, will skip it and approve.
+
+## The second-order effect
+
+The interesting change is not faster reviews. It is _who_ reviews. Once
+looking at the change costs one click, the people with the most relevant
+judgement — the designer, the writer, the person who answers the support
+inbox — start showing up in pull requests where they were previously absent.
+
+That is worth more than the time saved.

@@ -1,0 +1,50 @@
+---
+/**
+ * Plain links, no JavaScript. Each one points at the *same* page in the other
+ * locale — `switchLocalePath` swaps the prefix and keeps the rest of the path
+ * — so switching language from a blog post lands on that post, not the home
+ * page, which is the usual bug in hand-rolled language switchers.
+ */
+import { LOCALES, LOCALE_TAGS, type Locale } from "@/content/schemas"
+import { switchLocalePath, useTranslations } from "@/i18n/utils"
+import { cn } from "@/lib/utils"
+
+interface Props {
+  lang: Locale
+  /** Locale-less path of the current page, e.g. "/blog/my-post". */
+  path: string
+  class?: string
+}
+
+const { lang, path, class: className } = Astro.props
+const t = useTranslations(lang)
+---
+
+<nav
+  aria-label={t("lang.switch")}
+  class={cn("flex items-center gap-0.5", className)}
+>
+  {
+    LOCALES.map((locale) => {
+      const isActive = locale === lang
+      return (
+        <a
+          href={switchLocalePath(path, locale)}
+          hreflang={LOCALE_TAGS[locale]}
+          lang={LOCALE_TAGS[locale]}
+          aria-current={isActive ? "true" : undefined}
+          title={t(`lang.${locale}`)}
+          class={cn(
+            "rounded px-2 py-1 text-xs font-medium uppercase transition-colors",
+            isActive
+              ? "bg-accent text-accent-foreground"
+              : "text-muted-foreground hover:bg-accent/60 hover:text-accent-foreground"
+          )}
+        >
+          {locale}
+          <span class="sr-only"> — {t(`lang.${locale}`)}</span>
+        </a>
+      )
+    })
+  }
+</nav>

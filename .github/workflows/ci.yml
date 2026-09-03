@@ -1,0 +1,54 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # The Sätteri modified-time plugin reads `git log`. The default
+          # shallow checkout would resolve every post to the same commit.
+          # (Vercel clones at depth 2 and cannot be configured, which is why
+          # frontmatter `updatedDate` is the source of truth — see
+          # docs/ARCHITECTURE.md.)
+          fetch-depth: 0
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Check formatting
+        run: pnpm format:check
+
+      - name: Lint
+        run: pnpm lint
+
+      - name: Check spelling
+        run: pnpm spell
+
+      - name: Check architecture rules
+        run: pnpm check:arch
+
+      - name: Type check
+        run: pnpm check
+
+      - name: Test
+        run: pnpm test
+
+      - name: Build
+        run: pnpm build
+
+      - name: Lighthouse budget
+        run: pnpm dlx @lhci/cli@0.15.1 autorun

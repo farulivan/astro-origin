@@ -1,0 +1,66 @@
+[
+  {
+    "id": "en-what-is-it",
+    "lang": "en",
+    "translationKey": "what-is-it",
+    "order": 0,
+    "question": "What exactly does Beacon do?",
+    "answer": "It builds your project on every push, gives each pull request its own preview URL, and keeps the previous release one click away. That is the whole product."
+  },
+  {
+    "id": "en-migrate",
+    "lang": "en",
+    "translationKey": "migrate",
+    "order": 1,
+    "question": "How hard is it to migrate?",
+    "answer": "Point Beacon at your repository and it detects the framework, the build command and the output directory. Most teams are deploying within ten minutes."
+  },
+  {
+    "id": "en-pricing",
+    "lang": "en",
+    "translationKey": "pricing",
+    "order": 2,
+    "question": "Do I need a credit card to start?",
+    "answer": "No. The free tier is genuinely free and does not expire. You only add a card when you invite your fourth teammate."
+  },
+  {
+    "id": "en-support",
+    "lang": "en",
+    "translationKey": "support",
+    "order": 3,
+    "question": "What happens when something breaks at 3am?",
+    "answer": "Roll back from the dashboard or the CLI in a single command. Every release is kept, so recovery never depends on rebuilding anything."
+  },
+  {
+    "id": "id-what-is-it",
+    "lang": "id",
+    "translationKey": "what-is-it",
+    "order": 0,
+    "question": "Apa sebenarnya yang dilakukan Beacon?",
+    "answer": "Beacon membangun proyek Anda setiap kali ada push, memberi setiap pull request URL pratinjau sendiri, dan menyimpan rilis sebelumnya agar bisa dipulihkan dengan satu klik. Hanya itu."
+  },
+  {
+    "id": "id-migrate",
+    "lang": "id",
+    "translationKey": "migrate",
+    "order": 1,
+    "question": "Seberapa sulit proses migrasinya?",
+    "answer": "Arahkan Beacon ke repositori Anda dan ia akan mengenali framework, perintah build, serta direktori keluarannya. Sebagian besar tim sudah bisa merilis dalam sepuluh menit."
+  },
+  {
+    "id": "id-pricing",
+    "lang": "id",
+    "translationKey": "pricing",
+    "order": 2,
+    "question": "Apakah saya perlu kartu kredit untuk mulai?",
+    "answer": "Tidak. Paket gratis benar-benar gratis dan tidak ada masa kedaluwarsa. Kartu baru diperlukan saat Anda mengundang rekan keempat."
+  },
+  {
+    "id": "id-support",
+    "lang": "id",
+    "translationKey": "support",
+    "order": 3,
+    "question": "Bagaimana jika terjadi masalah pukul tiga pagi?",
+    "answer": "Pulihkan versi sebelumnya lewat dasbor atau CLI dengan satu perintah. Setiap rilis tersimpan, jadi pemulihan tidak pernah bergantung pada proses build ulang."
+  }
+]
