@@ -43,7 +43,7 @@ When starting the dev server for a long-running task, use `astro dev --backgroun
   source order. The Shiki rules in `global.css` sit outside every layer for
   exactly this reason. Check the cascade layer before adding specificity.
 - **The Lighthouse budget asserts accessibility at exactly 1.00**, and it
-  audits every page the build produces, in both locales. One token colour in
+  audits every page the build produces, in both locales. One token color in
   one code block is enough to fail it: `github-light`'s comment is #6A737D on
   white, which is 4.4:1. Use the `-high-contrast` Shiki themes.
 - **Preload every font that sets real text.** Geist Mono sets dates, tags and
