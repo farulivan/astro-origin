@@ -86,7 +86,7 @@ const tiers: PricingTier[] = (
   lang={lang}
   path="/"
   title={t("hero.title")}
-  description={t("hero.subtitle")}
+  description={t("hero.subtitle", { name: siteConfig.name })}
 >
   <Hero lang={lang} />
   <Features lang={lang} items={features} />

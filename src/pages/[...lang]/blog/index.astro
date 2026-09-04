@@ -3,7 +3,7 @@ import type { InferGetStaticPropsType } from "astro"
 
 import Pagination from "@/components/Pagination.astro"
 import PostList from "@/components/sections/PostList.astro"
-import Container from "@/components/ui/Container.astro"
+import Section from "@/components/ui/Section.astro"
 import { getPostListItems } from "@/content/queries"
 import { siteConfig } from "@/config/site"
 import { LOCALES } from "@/content/schemas"
@@ -33,9 +33,11 @@ const page = paginate(all, 1, siteConfig.postsPerPage)
   title={t("blog.title")}
   description={t("blog.subtitle")}
 >
-  <Container class="py-16">
+  <Section label={t("waypoint.explore")} origin>
     <header class="mb-10 max-w-2xl">
-      <h1 class="text-4xl font-semibold tracking-tight">{t("blog.title")}</h1>
+      <h1 class="text-4xl font-semibold tracking-[-0.03em]">
+        {t("blog.title")}
+      </h1>
       <p class="text-muted-foreground mt-3 text-pretty">{t("blog.subtitle")}</p>
     </header>
 
@@ -45,5 +47,5 @@ const page = paginate(all, 1, siteConfig.postsPerPage)
       hrefFor={(slug) => localizePath(`/blog/${slug}`, lang)}
     />
     <Pagination lang={lang} current={page.current} total={page.total} />
-  </Container>
+  </Section>
 </BaseLayout>

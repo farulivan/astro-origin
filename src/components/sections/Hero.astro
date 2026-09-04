@@ -1,8 +1,9 @@
 ---
 import Badge from "@/components/ui/Badge.astro"
 import Button from "@/components/ui/Button.astro"
-import Container from "@/components/ui/Container.astro"
 import Icon from "@/components/ui/Icon.astro"
+import Section from "@/components/ui/Section.astro"
+import { siteConfig } from "@/config/site"
 import type { Locale } from "@/content/schemas"
 import { localizePath, useTranslations } from "@/i18n/utils"
 
@@ -14,31 +15,60 @@ const { lang } = Astro.props
 const t = useTranslations(lang)
 ---
 
-<Container tag="section" class="py-20 sm:py-28">
-  <div class="mx-auto max-w-3xl text-center">
-    <Badge class="bg-accent/60 mb-5 gap-1.5">
-      <span class="bg-primary size-1.5 rounded-full" aria-hidden="true"></span>
-      {t("hero.eyebrow")}
-    </Badge>
+<Section label={t("waypoint.start")} origin>
+  <div class="grid items-start gap-12 lg:grid-cols-[minmax(0,1fr)_20rem]">
+    <div>
+      <Badge class="gap-1.5">
+        <span class="bg-primary size-1.5 rounded-full" aria-hidden="true"
+        ></span>
+        {t("hero.eyebrow")}
+      </Badge>
 
-    <h1
-      class="text-4xl font-semibold tracking-tight text-balance sm:text-5xl lg:text-6xl"
+      <h1
+        class="mt-6 max-w-[18ch] text-4xl font-semibold tracking-[-0.035em] text-balance sm:text-5xl lg:text-6xl"
+      >
+        {t("hero.title")}
+      </h1>
+
+      <p class="text-muted-foreground mt-6 max-w-xl text-lg text-pretty">
+        {t("hero.subtitle", { name: siteConfig.name })}
+      </p>
+
+      <div class="mt-8 flex flex-col gap-3 sm:flex-row">
+        <Button href={localizePath("/#pricing", lang)} size="lg" class="group">
+          {t("hero.ctaPrimary")}
+          <Icon
+            name="arrowRight"
+            class="size-4 transition-transform group-hover:translate-x-0.5"
+          />
+        </Button>
+        <Button href={localizePath("/blog", lang)} size="lg" variant="outline">
+          {t("hero.ctaSecondary")}
+        </Button>
+      </div>
+    </div>
+
+    {
+      /*
+      The product's own vernacular, rather than a stock illustration: a push
+      and the URL it produces. Every string in here is a command or an
+      address, so there is nothing to translate and no dictionary keys to
+      keep in sync across locales.
+    */
+    }
+    <div
+      class="border-border bg-card hidden rounded-md border p-5 font-mono text-xs leading-relaxed lg:block"
+      aria-label="Example deployment"
     >
-      {t("hero.title")}
-    </h1>
-
-    <p class="text-muted-foreground mx-auto mt-6 max-w-2xl text-lg text-pretty">
-      {t("hero.subtitle")}
-    </p>
-
-    <div class="mt-9 flex flex-col justify-center gap-3 sm:flex-row">
-      <Button href={localizePath("/#pricing", lang)} size="lg">
-        {t("hero.ctaPrimary")}
-        <Icon name="arrowRight" class="size-4" />
-      </Button>
-      <Button href={localizePath("/blog", lang)} size="lg" variant="outline">
-        {t("hero.ctaSecondary")}
-      </Button>
+      <p><span class="text-muted-foreground select-none">$ </span>git push</p>
+      <p class="text-muted-foreground mt-4">
+        Building&nbsp;&nbsp;<span class="text-foreground">2.1s</span>
+      </p>
+      <p class="text-muted-foreground">
+        Uploading&nbsp;&nbsp;<span class="text-foreground">0.4s</span>
+      </p>
+      <p class="text-muted-foreground mt-4">Preview ready</p>
+      <p class="text-primary break-all">origin.dev/p/feat-checkout</p>
     </div>
   </div>
-</Container>
+</Section>

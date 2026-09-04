@@ -1,7 +1,6 @@
 ---
-import Card from "@/components/ui/Card.astro"
-import Container from "@/components/ui/Container.astro"
 import Icon from "@/components/ui/Icon.astro"
+import Section from "@/components/ui/Section.astro"
 import type { FeatureIconName, Locale } from "@/content/schemas"
 import { useTranslations } from "@/i18n/utils"
 
@@ -25,30 +24,39 @@ const { lang, items } = Astro.props
 const t = useTranslations(lang)
 ---
 
-<Container tag="section" id="features" class="py-16 sm:py-24">
-  <div class="mx-auto max-w-2xl text-center">
-    <h2 class="text-3xl font-semibold tracking-tight sm:text-4xl">
-      {t("features.title")}
-    </h2>
-    <p class="text-muted-foreground mt-4 text-pretty">
-      {t("features.subtitle")}
-    </p>
-  </div>
+<Section label={t("waypoint.move")} id="features">
+  <h2
+    class="max-w-[20ch] text-3xl font-semibold tracking-[-0.02em] text-balance sm:text-4xl"
+  >
+    {t("features.title")}
+  </h2>
+  <p class="text-muted-foreground mt-4 max-w-xl text-pretty">
+    {t("features.subtitle")}
+  </p>
 
-  <ul class="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+  {
+    /*
+    Ruled rows rather than a grid of boxes. Six bordered cards read as six
+    competing objects; a shared rule reads as one list, which is what this is.
+  */
+  }
+  <ul class="mt-12 grid gap-x-12 sm:grid-cols-2">
     {
       items.map((item) => (
-        <Card tag="li">
-          <span
-            class="bg-accent text-primary mb-4 flex size-9 items-center justify-center rounded-lg"
-            aria-hidden="true"
-          >
-            <Icon name={item.icon} class="size-4.5" />
-          </span>
-          <h3 class="font-medium">{item.title}</h3>
-          <p class="text-muted-foreground mt-2 text-sm">{item.description}</p>
-        </Card>
+        <li class="border-border border-t py-6">
+          <div class="flex items-center gap-3">
+            <Icon
+              name={item.icon}
+              class="text-primary size-4 shrink-0"
+              aria-hidden="true"
+            />
+            <h3 class="font-medium">{item.title}</h3>
+          </div>
+          <p class="text-muted-foreground mt-2 text-sm text-pretty">
+            {item.description}
+          </p>
+        </li>
       ))
     }
   </ul>
-</Container>
+</Section>

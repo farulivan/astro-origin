@@ -2,7 +2,7 @@
 import { Image } from "astro:assets"
 
 import Button from "@/components/ui/Button.astro"
-import Container from "@/components/ui/Container.astro"
+import Section from "@/components/ui/Section.astro"
 import Icon from "@/components/ui/Icon.astro"
 import Prose from "@/components/ui/Prose.astro"
 import type { Locale } from "@/content/schemas"
@@ -59,8 +59,8 @@ const displayed = resolvePostDate({ pubDate, updatedDate, lastModified })
   tags={tags}
   availableLocales={availableLocales}
 >
-  <Container class="py-12">
-    <div class="mx-auto max-w-2xl">
+  <Section space="sm">
+    <div class="max-w-2xl">
       <Button
         href={localizePath("/blog", lang)}
         variant="ghost"
@@ -83,12 +83,12 @@ const displayed = resolvePostDate({ pubDate, updatedDate, lastModified })
       }
 
       <header class="mb-10">
-        <h1 class="text-4xl font-semibold tracking-tight text-balance">
+        <h1 class="text-4xl font-semibold tracking-[-0.03em] text-balance">
           {title}
         </h1>
 
         <div
-          class="text-muted-foreground mt-4 flex flex-wrap items-center gap-x-2 gap-y-1 text-sm"
+          class="text-muted-foreground mt-4 flex flex-wrap items-center gap-x-2 gap-y-1 font-mono text-xs tracking-[0.08em] uppercase"
         >
           <time datetime={toDateAttribute(displayed.date)}>
             {
@@ -114,11 +114,9 @@ const displayed = resolvePostDate({ pubDate, updatedDate, lastModified })
 
         {
           tags.length > 0 && (
-            <ul class="mt-4 flex flex-wrap gap-1.5">
+            <ul class="text-muted-foreground mt-4 flex flex-wrap gap-x-3 font-mono text-xs tracking-[0.08em] uppercase">
               {tags.map((tag) => (
-                <li class="bg-accent text-muted-foreground rounded-full px-2.5 py-0.5 text-xs">
-                  {tag}
-                </li>
+                <li>{tag}</li>
               ))}
             </ul>
           )
@@ -142,5 +140,5 @@ const displayed = resolvePostDate({ pubDate, updatedDate, lastModified })
         <slot />
       </Prose>
     </div>
-  </Container>
+  </Section>
 </BaseLayout>

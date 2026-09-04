@@ -1,6 +1,7 @@
 /**
- * App-level configuration — the one place to edit when reusing this
- * boilerplate for a real product. Content rules live in
+ * App-level configuration — the first place to edit when reusing this
+ * template for a real product, and the only one `pnpm setup` rewrites
+ * automatically. Content rules live in
  * `src/content/schemas.ts` and copy lives in `src/i18n/ui.ts`; neither
  * belongs here.
  */
@@ -8,7 +9,7 @@ import type { TranslationKey } from "@/i18n/ui"
 
 export const siteConfig = {
   /** Brand name. Appears in <title>, the wordmark and structured data. */
-  name: "Beacon",
+  name: "Origin",
   /**
    * Canonical origin, no trailing slash. Also set as `site` in
    * astro.config.mjs, which is what makes canonical URLs, the sitemap and
@@ -24,14 +25,14 @@ export const siteConfig = {
    */
   signupUrl: "/#",
   /** @-handle used for twitter:site; omit the leading @. */
-  twitterHandle: "beacon",
+  twitterHandle: "astro_origin",
   /**
    * Blog posts per page. Deliberately low so the seed content exercises
    * pagination; a real site wants something like 10.
    */
   postsPerPage: 2,
   /** localStorage key for the chosen theme. */
-  themeStorageKey: "beacon.theme",
+  themeStorageKey: "origin.theme",
   /**
    * Primary navigation. `key` is a translation key rather than literal text,
    * so adding a locale never means touching this file.

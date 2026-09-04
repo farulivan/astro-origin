@@ -22,11 +22,11 @@ const isExternal = (href: string) => /^https?:\/\//.test(href)
 const githubHref = siteConfig.social.github
 ---
 
-<footer class="border-border mt-24 border-t py-10">
+<footer class="border-border border-t py-10">
   <Container
     class="text-muted-foreground flex flex-col items-center justify-between gap-4 text-sm sm:flex-row"
   >
-    <p>{t("footer.rights", { year })}</p>
+    <p>{t("footer.rights", { year, name: siteConfig.name })}</p>
 
     <div class="flex items-center gap-4">
       <a

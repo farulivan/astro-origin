@@ -22,11 +22,17 @@ export const en = {
   "nav.openMenu": "Open menu",
   "nav.closeMenu": "Close menu",
 
+  // Waypoints. The trajectory marks three steps and no more; a label on
+  // every section would be decoration rather than structure.
+  "waypoint.start": "Start",
+  "waypoint.move": "Move",
+  "waypoint.explore": "Explore",
+
   // Hero
   "hero.eyebrow": "Now in public beta",
-  "hero.title": "Ship your next idea before the coffee goes cold",
+  "hero.title": "Everything starts somewhere",
   "hero.subtitle":
-    "Beacon gives small teams the deployment pipeline, preview environments and rollback safety of a much larger one — without the platform team.",
+    "{name} gives small teams the deployment pipeline, preview environments and rollback safety of a much larger one — without the platform team.",
   "hero.ctaPrimary": "Start free",
   "hero.ctaSecondary": "Read the blog",
 
@@ -49,7 +55,7 @@ export const en = {
 
   // Testimonials
   "testimonials.title": "Teams that made the switch",
-  "testimonials.subtitle": "A few words from people who ship on Beacon daily.",
+  "testimonials.subtitle": "A few words from people who ship on {name} daily.",
 
   // FAQ
   "faq.title": "Frequently asked questions",
@@ -61,7 +67,7 @@ export const en = {
   "cta.button": "Get started free",
 
   // Footer
-  "footer.rights": "© {year} Beacon. All rights reserved.",
+  "footer.rights": "© {year} {name}. All rights reserved.",
   "footer.builtWith": "Built with Astro",
 
   // Blog
@@ -71,7 +77,6 @@ export const en = {
   "blog.published": "Published {date}",
   "blog.updated": "Updated {date}",
   "blog.backToBlog": "Back to blog",
-  "blog.readMore": "Read more",
   "blog.empty": "No posts yet. Check back soon.",
   "blog.untranslated":
     "This post isn't available in your language yet — showing the English version.",
@@ -119,10 +124,14 @@ export const id: Record<TranslationKey, string> = {
   "nav.openMenu": "Buka menu",
   "nav.closeMenu": "Tutup menu",
 
+  "waypoint.start": "Mulai",
+  "waypoint.move": "Melaju",
+  "waypoint.explore": "Jelajahi",
+
   "hero.eyebrow": "Kini dalam beta publik",
-  "hero.title": "Luncurkan ide berikutnya sebelum kopi Anda dingin",
+  "hero.title": "Semua bermula dari satu titik",
   "hero.subtitle":
-    "Beacon memberi tim kecil alur deployment, lingkungan pratinjau, dan keamanan rollback selayaknya tim besar — tanpa perlu tim platform.",
+    "{name} memberi tim kecil alur deployment, lingkungan pratinjau, dan keamanan rollback selayaknya tim besar — tanpa perlu tim platform.",
   "hero.ctaPrimary": "Mulai gratis",
   "hero.ctaSecondary": "Baca blog",
 
@@ -144,7 +153,7 @@ export const id: Record<TranslationKey, string> = {
 
   "testimonials.title": "Tim yang telah beralih",
   "testimonials.subtitle":
-    "Sedikit cerita dari mereka yang merilis lewat Beacon setiap hari.",
+    "Sedikit cerita dari mereka yang merilis lewat {name} setiap hari.",
 
   "faq.title": "Pertanyaan yang sering diajukan",
   "faq.subtitle": "Masih bingung? Hubungi kami dan tim kami akan menjawab.",
@@ -154,7 +163,7 @@ export const id: Record<TranslationKey, string> = {
     "Siapkan deployment pertama Anda dalam kurang dari lima menit.",
   "cta.button": "Mulai gratis sekarang",
 
-  "footer.rights": "© {year} Beacon. Seluruh hak cipta dilindungi.",
+  "footer.rights": "© {year} {name}. Seluruh hak cipta dilindungi.",
   "footer.builtWith": "Dibuat dengan Astro",
 
   "blog.title": "Blog",
@@ -164,7 +173,6 @@ export const id: Record<TranslationKey, string> = {
   "blog.published": "Terbit {date}",
   "blog.updated": "Diperbarui {date}",
   "blog.backToBlog": "Kembali ke blog",
-  "blog.readMore": "Selengkapnya",
   "blog.empty": "Belum ada tulisan. Nantikan segera.",
   "blog.untranslated":
     "Artikel ini belum tersedia dalam bahasa Anda — menampilkan versi Inggris.",

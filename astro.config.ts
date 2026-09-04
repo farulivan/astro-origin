@@ -70,6 +70,16 @@ export default defineConfig({
    * installing @astrojs/markdown-remark and giving up the faster pipeline.
    */
   markdown: {
+    /*
+     * Both themes are emitted on every token as --shiki-light / --shiki-dark
+     * and `defaultColor: false` stops Shiki picking a winner, so the choice
+     * happens in CSS. With a single theme Shiki bakes it in as an inline
+     * style, and light mode renders a dark code block.
+     */
+    shikiConfig: {
+      themes: { light: "github-light", dark: "github-dark" },
+      defaultColor: false,
+    },
     processor: satteri({
       mdastPlugins: [
         readingTimePlugin,

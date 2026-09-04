@@ -2,7 +2,7 @@
 import PricingToggle, {
   type PricingTier,
 } from "@/components/islands/PricingToggle"
-import Container from "@/components/ui/Container.astro"
+import Section from "@/components/ui/Section.astro"
 import type { Locale } from "@/content/schemas"
 import { useTranslations } from "@/i18n/utils"
 
@@ -15,17 +15,17 @@ const { lang, tiers } = Astro.props
 const t = useTranslations(lang)
 ---
 
-<Container tag="section" id="pricing" class="py-16 text-center sm:py-24">
-  <div class="mx-auto max-w-2xl">
-    <h2 class="text-3xl font-semibold tracking-tight sm:text-4xl">
-      {t("pricing.title")}
-    </h2>
-    <p class="text-muted-foreground mt-4 text-pretty">
-      {t("pricing.subtitle")}
-    </p>
-  </div>
+<Section id="pricing">
+  <h2
+    class="max-w-[20ch] text-3xl font-semibold tracking-[-0.02em] text-balance sm:text-4xl"
+  >
+    {t("pricing.title")}
+  </h2>
+  <p class="text-muted-foreground mt-4 max-w-xl text-pretty">
+    {t("pricing.subtitle")}
+  </p>
 
-  <div class="mt-12 text-left">
+  <div class="mt-12">
     {
       /*
       client:visible, not client:load — the pricing table renders to static
@@ -48,4 +48,4 @@ const t = useTranslations(lang)
       }}
     />
   </div>
-</Container>
+</Section>

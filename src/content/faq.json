@@ -4,7 +4,7 @@
     "lang": "en",
     "translationKey": "what-is-it",
     "order": 0,
-    "question": "What exactly does Beacon do?",
+    "question": "What exactly does Origin do?",
     "answer": "It builds your project on every push, gives each pull request its own preview URL, and keeps the previous release one click away. That is the whole product."
   },
   {
@@ -13,7 +13,7 @@
     "translationKey": "migrate",
     "order": 1,
     "question": "How hard is it to migrate?",
-    "answer": "Point Beacon at your repository and it detects the framework, the build command and the output directory. Most teams are deploying within ten minutes."
+    "answer": "Point Origin at your repository and it detects the framework, the build command and the output directory. Most teams are deploying within ten minutes."
   },
   {
     "id": "en-pricing",
@@ -36,8 +36,8 @@
     "lang": "id",
     "translationKey": "what-is-it",
     "order": 0,
-    "question": "Apa sebenarnya yang dilakukan Beacon?",
-    "answer": "Beacon membangun proyek Anda setiap kali ada push, memberi setiap pull request URL pratinjau sendiri, dan menyimpan rilis sebelumnya agar bisa dipulihkan dengan satu klik. Hanya itu."
+    "question": "Apa sebenarnya yang dilakukan Origin?",
+    "answer": "Origin membangun proyek Anda setiap kali ada push, memberi setiap pull request URL pratinjau sendiri, dan menyimpan rilis sebelumnya agar bisa dipulihkan dengan satu klik. Hanya itu."
   },
   {
     "id": "id-migrate",
@@ -45,7 +45,7 @@
     "translationKey": "migrate",
     "order": 1,
     "question": "Seberapa sulit proses migrasinya?",
-    "answer": "Arahkan Beacon ke repositori Anda dan ia akan mengenali framework, perintah build, serta direktori keluarannya. Sebagian besar tim sudah bisa merilis dalam sepuluh menit."
+    "answer": "Arahkan Origin ke repositori Anda dan ia akan mengenali framework, perintah build, serta direktori keluarannya. Sebagian besar tim sudah bisa merilis dalam sepuluh menit."
   },
   {
     "id": "id-pricing",

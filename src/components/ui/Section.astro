@@ -1,0 +1,75 @@
+---
+import Container from "@/components/ui/Container.astro"
+import { cn } from "@/lib/utils"
+
+/**
+ * A page section hung off the trajectory.
+ *
+ * The left column is a 1px rail; the content column hangs to the right of it.
+ * Sections stack with padding rather than margin, so consecutive rails meet
+ * and read as one continuous line running from the origin dot in the hero
+ * down to the footer. That line is the whole visual idea, so it is owned here
+ * rather than repeated in seven section components.
+ *
+ * `label` is the mono waypoint text. Only the three that mark a real step in
+ * the page carry one — start, move, explore. The rest keep the line running
+ * and stay quiet, because a marker on every section is decoration, not
+ * structure.
+ */
+interface Props {
+  /** Waypoint text. Omit it and the section contributes rail but no marker. */
+  label?: string | undefined
+  /** The first waypoint. Renders a larger dot that interrupts the line. */
+  origin?: boolean | undefined
+  /** Vertical rhythm. Sections deliberately do not all breathe the same. */
+  space?: "sm" | "md" | "lg"
+  id?: string
+  tag?: "section" | "div"
+  class?: string
+  "aria-label"?: string
+  "aria-labelledby"?: string
+}
+
+const {
+  label,
+  origin = false,
+  space = "md",
+  tag = "section",
+  class: className,
+  ...rest
+} = Astro.props
+
+const spacing = {
+  sm: "py-10 sm:py-14",
+  md: "py-14 sm:py-20",
+  lg: "py-16 sm:py-24",
+}[space]
+---
+
+<Container {tag} class={className} {...rest}>
+  <div
+    class="grid grid-cols-[1.5rem_minmax(0,1fr)] sm:grid-cols-[2.5rem_minmax(0,1fr)]"
+  >
+    <div class="relative" aria-hidden="true">
+      <span class="bg-border absolute inset-y-0 left-0 w-px"></span>
+    </div>
+
+    <div class={spacing}>
+      {
+        label && (
+          <p class="text-muted-foreground relative mb-6 font-mono text-[0.6875rem] tracking-[0.18em] uppercase">
+            <span
+              class={cn(
+                "bg-primary absolute top-1/2 -left-6 -translate-x-1/2 -translate-y-1/2 rounded-full sm:-left-10",
+                origin ? "ring-background size-2.5 ring-4" : "size-1.5"
+              )}
+              aria-hidden="true"
+            />
+            {label}
+          </p>
+        )
+      }
+      <slot />
+    </div>
+  </div>
+</Container>

@@ -7,6 +7,7 @@ import LanguagePicker from "./LanguagePicker.astro"
 import ThemeToggle from "./ThemeToggle.astro"
 import Container from "./ui/Container.astro"
 import Icon from "./ui/Icon.astro"
+import Mark from "./ui/Mark.astro"
 
 interface Props {
   lang: Locale
@@ -35,12 +36,7 @@ const items = siteConfig.nav.map((item) => ({
       href={localizePath("/", lang)}
       class="flex items-center gap-2 font-semibold tracking-tight"
     >
-      <span
-        class="bg-primary text-primary-foreground flex size-7 items-center justify-center rounded-md"
-        aria-hidden="true"
-      >
-        <Icon name="zap" class="size-4" />
-      </span>
+      <Mark class="text-primary size-5" />
       {siteConfig.name}
     </a>
 

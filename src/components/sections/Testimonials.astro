@@ -1,6 +1,7 @@
 ---
 import Card from "@/components/ui/Card.astro"
-import Container from "@/components/ui/Container.astro"
+import Section from "@/components/ui/Section.astro"
+import { siteConfig } from "@/config/site"
 import type { Locale } from "@/content/schemas"
 import { useTranslations } from "@/i18n/utils"
 
@@ -19,29 +20,29 @@ const { lang, items } = Astro.props
 const t = useTranslations(lang)
 ---
 
-<Container tag="section" class="py-16 sm:py-24">
-  <div class="mx-auto max-w-2xl text-center">
-    <h2 class="text-3xl font-semibold tracking-tight sm:text-4xl">
-      {t("testimonials.title")}
-    </h2>
-    <p class="text-muted-foreground mt-4 text-pretty">
-      {t("testimonials.subtitle")}
-    </p>
-  </div>
+<Section>
+  <h2
+    class="max-w-[20ch] text-3xl font-semibold tracking-[-0.02em] text-balance sm:text-4xl"
+  >
+    {t("testimonials.title")}
+  </h2>
+  <p class="text-muted-foreground mt-4 max-w-xl text-pretty">
+    {t("testimonials.subtitle", { name: siteConfig.name })}
+  </p>
 
   <ul class="mt-12 grid gap-4 md:grid-cols-3">
     {
       items.map((item) => (
         <Card tag="li" class="flex flex-col">
-          <blockquote class="flex-1 text-sm leading-relaxed text-pretty">
+          <blockquote class="flex-1 leading-relaxed text-pretty">
             “{item.quote}”
           </blockquote>
-          <footer class="border-border mt-5 border-t pt-4 text-sm">
-            <div class="font-medium">{item.author}</div>
-            <div class="text-muted-foreground">{item.role}</div>
+          <footer class="mt-6 font-mono text-xs tracking-[0.08em] uppercase">
+            <div>{item.author}</div>
+            <div class="text-muted-foreground mt-1">{item.role}</div>
           </footer>
         </Card>
       ))
     }
   </ul>
-</Container>
+</Section>

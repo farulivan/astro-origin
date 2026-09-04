@@ -1,0 +1,33 @@
+---
+import type { HTMLAttributes } from "astro/types"
+
+import { cn } from "@/lib/utils"
+
+/**
+ * The brand mark: a point, and the path leaving it.
+ *
+ * Drawn in `currentColor` so it takes the color of whatever it sits in, and
+ * sized in `em`-free utilities so a caller sets the size. The same geometry
+ * is duplicated once, in public/favicon.svg — a favicon cannot import an
+ * Astro component, and two copies of nine bytes of path data is cheaper than
+ * a build step to keep one in sync.
+ */
+type Props = HTMLAttributes<"svg">
+
+const { class: className, ...rest } = Astro.props
+---
+
+<svg
+  viewBox="0 0 16 16"
+  fill="none"
+  aria-hidden="true"
+  class={cn("size-5", className)}
+  {...rest}
+>
+  <path
+    d="M4 12C9 12 12.5 8.5 12.5 3.5"
+    stroke="currentColor"
+    stroke-width="2"
+    stroke-linecap="round"></path>
+  <circle cx="4" cy="12" r="2.75" fill="currentColor"></circle>
+</svg>
