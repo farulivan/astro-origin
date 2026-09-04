@@ -80,8 +80,15 @@ const t = useTranslations(lang)
       document.documentElement.dataset.themeChoice = choice
     </script>
 
+    {
+      /*
+      Both faces preload. The mono is not decorative here — it sets every
+      date, tag, waypoint and code block — and leaving it out of the preload shifted
+      post pages by 0.137 CLS as the fallback metrics gave way.
+    */
+    }
     <Font cssVariable="--font-geist" preload />
-    <Font cssVariable="--font-geist-mono" />
+    <Font cssVariable="--font-geist-mono" preload />
 
     <Seo lang={lang} path={path} {...seo} />
 

@@ -1,6 +1,6 @@
 # Architecture
 
-Technical design for this Astro landing-page boilerplate. The delivery order is in [PLAN.md](./PLAN.md).
+Technical design for astro-origin. What is planned next is in [ROADMAP.md](./ROADMAP.md).
 
 ## The one idea
 
@@ -24,7 +24,7 @@ Neither imports Astro, React, or a component. Both are unit-tested without a DOM
 | Astro 7                                 | Zero JS by default, file-based routing, built-in i18n; the Rust compiler and Vite 8 / Rolldown make builds fast without extra tooling |
 | Node 22.12+ / pnpm 11                   | Astro's supported runtime. Bun was evaluated and rejected — see below                                                                 |
 | TypeScript 6.0                          | `@astrojs/check` supports `^5 \|\| ^6` and typescript-eslint declares `<6.1.0`; TS 7 satisfies neither                                |
-| Tailwind CSS v4 via `@tailwindcss/vite` | `@astrojs/tailwind` is deprecated. Same setup as the sibling `hotel-dashboard` project                                                |
+| Tailwind CSS v4 via `@tailwindcss/vite` | `@astrojs/tailwind` is deprecated; the Vite plugin is the supported path                                                              |
 | `@tailwindcss/typography`               | Styles the HTML that Markdown generates — the one place utility classes cannot reach                                                  |
 | React 19 (one island)                   | An escape hatch for genuine interactivity, deliberately used exactly once                                                             |
 | Zod 4 via `astro/zod`                   | Astro bundles its own Zod; a separate install causes version skew that breaks `defineCollection`                                      |
@@ -33,7 +33,7 @@ Neither imports Astro, React, or a component. Both are unit-tested without a DOM
 
 ### Why not Bun
 
-The sibling project runs entirely on Bun, so this was the default expectation. Two findings changed it:
+Bun was the default expectation. Two findings changed it:
 
 1. Astro's documentation carries a standing caution that _"using Bun with Astro may reveal rough edges. Some integrations may not work as expected."_
 2. `bun test` cannot compile `.astro` files at all. Astro's only supported component-test path is Vitest + `getViteConfig()` + the Container API — so Bun would have produced a mixed toolchain regardless of the package manager.

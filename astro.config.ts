@@ -77,7 +77,16 @@ export default defineConfig({
      * style, and light mode renders a dark code block.
      */
     shikiConfig: {
-      themes: { light: "github-light", dark: "github-dark" },
+      /*
+       * The high-contrast variants, not plain github-light/dark. The Lighthouse
+       * budget asserts accessibility at exactly 1.00, and github-light's comment
+       * token is #6A737D on white — 4.4:1, which fails the 4.5:1 threshold and
+       * takes the whole page down with it.
+       */
+      themes: {
+        light: "github-light-high-contrast",
+        dark: "github-dark-high-contrast",
+      },
       defaultColor: false,
     },
     processor: satteri({

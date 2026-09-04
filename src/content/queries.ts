@@ -8,8 +8,7 @@
  * `translationKey` so `/blog/x` and `/id/blog/x` are always the same article.
  * Duplicating that across three files is how the three quietly drift apart.
  *
- * This is the counterpart of `features/*'/queries.ts` in the sibling project:
- * data access lives in one place, and pages compose it.
+ * Data access lives in one place, and pages compose it.
  */
 import { getCollection, render, type CollectionEntry } from "astro:content"
 

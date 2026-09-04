@@ -3,9 +3,8 @@ import { describe, expect, it } from "vitest"
 import { faqSchema, postSchema, pricingSchema, LOCALES } from "./schemas"
 
 /**
- * The kernel's tests. These are the counterpart of the sibling project's
- * status-machine tests: they pin down the rules that both the build and the
- * UI depend on, and they need no Astro, no DOM and no build to run.
+ * The kernel's tests. They pin down the rules that both the build and the UI
+ * depend on, and they need no Astro, no DOM and no build to run.
  *
  * `image()` is supplied by Astro at build time, so it is stubbed here with a
  * schema that accepts anything — these tests are about the surrounding rules,

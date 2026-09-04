@@ -15,9 +15,8 @@ import { frontmatterOf } from "./astro-data"
  * a screen-reader-only note so the new tab is announced rather than sprung.
  *
  * The announcement is translated by reading the post's own `lang` — the same
- * dictionary the components use at render time. Build-time code sharing the
- * i18n kernel is the direct counterpart of `hotel-dashboard`'s mock server
- * importing `src/domain`: one definition, both sides of the boundary.
+ * dictionary the components use at render time: one definition of the copy,
+ * used on both sides of the build boundary.
  */
 export const externalLinksPlugin = defineMdastPlugin({
   name: "external-links",

@@ -4,8 +4,8 @@
  * Each collection pairs a loader (where the content comes from) with a schema
  * (what counts as valid). Because the schemas are a separate pure module,
  * moving to a CMS is a change to the `loader` lines alone: no schema moves, no
- * component moves, no page moves. That is the content boundary doing the same
- * job the network boundary does in `hotel-dashboard`.
+ * component moves, no page moves. The content boundary does here what a
+ * network boundary does in an application that talks to a server.
  */
 import { defineCollection } from "astro:content"
 import { file, glob } from "astro/loaders"
