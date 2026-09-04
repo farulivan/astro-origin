@@ -1,8 +1,14 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
   <style>
-    .m { stroke: #8d4315; fill: #8d4315 }
-    @media (prefers-color-scheme: dark) { .m { stroke: #e49564; fill: #e49564 } }
+    .band { fill: #8d4315 }
+    .seam { stroke: #fdfbf8 }
+    @media (prefers-color-scheme: dark) {
+      .band { fill: #e49564 }
+      .seam { stroke: #13100d }
+    }
   </style>
-  <path class="m" d="M4 12C9 12 12.5 8.5 12.5 3.5" fill="none" stroke-width="2" stroke-linecap="round"/>
-  <circle class="m" cx="4" cy="12" r="2.75" stroke="none"/>
+  <g transform="rotate(-35 50 50)">
+    <path class="band" d="M82.90 27.25A40 40 0 1 0 82.90 72.75A36 36 0 1 1 82.90 27.25Z" transform="rotate(180 50 50)"/>
+    <path class="band seam" d="M82.90 27.25A40 40 0 1 0 82.90 72.75A36 36 0 1 1 82.90 27.25Z" stroke-width="2.4" paint-order="stroke"/>
+  </g>
 </svg>

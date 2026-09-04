@@ -77,6 +77,25 @@ else
   pass "components translate through useTranslations"
 fi
 
+# 6. The site origin lives in config, so `pnpm setup` can rewrite it. A URL
+#    hardcoded in a component would survive setup silently and ship someone
+#    else's domain to production.
+#
+#    Allowed: the two XML namespaces that are identifiers rather than
+#    addresses — w3.org for SVG, schema.org for JSON-LD. Tests are excluded
+#    because their fixtures are not shipped markup.
+offenders=$(code_matches 'https?://' src/components src/layouts src/pages \
+  --include='*.astro' --include='*.ts' --include='*.tsx' \
+  | grep -vE '(www\.w3\.org|schema\.org)' \
+  | grep -vE '\.test\.(ts|tsx):' \
+  | cut -d: -f1 | sort -u || true)
+if [ -n "$offenders" ]; then
+  fail "a URL was hardcoded outside src/config/site.ts" $offenders \
+    "pnpm setup rewrites the origin in config; it cannot find it here."
+else
+  pass "the site origin stays in config"
+fi
+
 echo
 if [ "$failed" -ne 0 ]; then
   echo "Architecture check failed. See docs/ARCHITECTURE.md for the rationale."

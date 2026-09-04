@@ -77,6 +77,8 @@ export const en = {
   "blog.published": "Published {date}",
   "blog.updated": "Updated {date}",
   "blog.backToBlog": "Back to blog",
+  "blog.taggedWith": "Tagged “{tag}”",
+  "blog.allPosts": "All posts",
   "blog.empty": "No posts yet. Check back soon.",
   "blog.untranslated":
     "This post isn't available in your language yet — showing the English version.",
@@ -173,6 +175,8 @@ export const id: Record<TranslationKey, string> = {
   "blog.published": "Terbit {date}",
   "blog.updated": "Diperbarui {date}",
   "blog.backToBlog": "Kembali ke blog",
+  "blog.taggedWith": "Berlabel “{tag}”",
+  "blog.allPosts": "Semua tulisan",
   "blog.empty": "Belum ada tulisan. Nantikan segera.",
   "blog.untranslated":
     "Artikel ini belum tersedia dalam bahasa Anda — menampilkan versi Inggris.",

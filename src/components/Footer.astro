@@ -20,6 +20,7 @@ const year = new Date().getFullYear()
  */
 const isExternal = (href: string) => /^https?:\/\//.test(href)
 const githubHref = siteConfig.social.github
+const xHref = siteConfig.social.x
 ---
 
 <footer class="border-border border-t py-10">
@@ -37,6 +38,18 @@ const githubHref = siteConfig.social.github
       >
         GitHub{
           isExternal(githubHref) && (
+            <span class="sr-only"> {t("a11y.externalLink")}</span>
+          )
+        }
+      </a>
+      <a
+        href={xHref}
+        rel={isExternal(xHref) ? "noopener noreferrer" : undefined}
+        target={isExternal(xHref) ? "_blank" : undefined}
+        class="hover:text-foreground transition-colors"
+      >
+        X{
+          isExternal(xHref) && (
             <span class="sr-only"> {t("a11y.externalLink")}</span>
           )
         }

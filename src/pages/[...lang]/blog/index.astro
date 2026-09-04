@@ -45,6 +45,7 @@ const page = paginate(all, 1, siteConfig.postsPerPage)
       lang={lang}
       posts={page.items}
       hrefFor={(slug) => localizePath(`/blog/${slug}`, lang)}
+      tagHrefFor={(slug) => localizePath(`/blog/tag/${slug}`, lang)}
     />
     <Pagination lang={lang} current={page.current} total={page.total} />
   </Section>

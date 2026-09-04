@@ -3,15 +3,18 @@ import type { PostListItem } from "@/content/queries"
 import type { Locale } from "@/content/schemas"
 import { useTranslations } from "@/i18n/utils"
 import { formatDateShort, toDateAttribute } from "@/lib/format"
+import { slugify } from "@/lib/slugify"
 
 interface Props {
   lang: Locale
   posts: readonly PostListItem[]
   /** Builds a post URL; supplied by the page so this stays route-agnostic. */
   hrefFor: (slug: string) => string
+  /** Builds a tag URL. Omit it and tags render as plain metadata. */
+  tagHrefFor?: ((slug: string) => string) | undefined
 }
 
-const { lang, posts, hrefFor } = Astro.props
+const { lang, posts, hrefFor, tagHrefFor } = Astro.props
 const t = useTranslations(lang)
 ---
 
@@ -58,7 +61,20 @@ const t = useTranslations(lang)
           {post.tags.length > 0 && (
             <ul class="text-muted-foreground mt-4 flex flex-wrap gap-x-3 font-mono text-xs tracking-[0.08em] uppercase">
               {post.tags.map((tag) => (
-                <li>{tag}</li>
+                <li>
+                  {tagHrefFor ? (
+                    // `relative z-10` keeps this above the title link's
+                    // full-bleed overlay; without it the tag cannot be clicked.
+                    <a
+                      href={tagHrefFor(slugify(tag))}
+                      class="hover:text-foreground relative z-10 transition-colors"
+                    >
+                      {tag}
+                    </a>
+                  ) : (
+                    tag
+                  )}
+                </li>
               ))}
             </ul>
           )}

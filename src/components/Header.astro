@@ -13,9 +13,11 @@ interface Props {
   lang: Locale
   /** Locale-less path of the current page. */
   path: string
+  /** Where the language picker points, when that is not the current page. */
+  switchPath?: string | undefined
 }
 
-const { lang, path } = Astro.props
+const { lang, path, switchPath = path } = Astro.props
 const t = useTranslations(lang)
 
 /**
@@ -58,7 +60,7 @@ const items = siteConfig.nav.map((item) => ({
     </nav>
 
     <div class="ml-auto flex items-center gap-1 md:ml-0">
-      <LanguagePicker lang={lang} path={path} class="hidden sm:flex" />
+      <LanguagePicker lang={lang} path={switchPath} class="hidden sm:flex" />
       <ThemeToggle lang={lang} />
       <button
         type="button"
@@ -94,7 +96,7 @@ const items = siteConfig.nav.map((item) => ({
           }
         </ul>
       </nav>
-      <LanguagePicker lang={lang} path={path} class="mt-3 sm:hidden" />
+      <LanguagePicker lang={lang} path={switchPath} class="mt-3 sm:hidden" />
     </Container>
   </div>
 </header>
@@ -131,5 +133,4 @@ const items = siteConfig.nav.map((item) => ({
   }
 
   setUp()
-  document.addEventListener("astro:after-swap", setUp)
 </script>

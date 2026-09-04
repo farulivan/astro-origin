@@ -30,6 +30,11 @@ When starting the dev server for a long-running task, use `astro dev --backgroun
 
 - **Astro 7 uses Sätteri, not remark.** Remark/rehype plugins do not run. Write Sätteri mdast plugins (see `src/mdast/`).
 - **Never name a prop `as`.** It is a TS keyword and silently breaks Astro's `Props` binding, producing implicit-`any` errors in _unrelated_ files. Use `tag`. Astro's documented `Polymorphic<{ as: Tag }>` helper hits the same problem in 7.2.10, one level removed — it type-checks in isolation but breaks Props binding in the components that consume it. `Container.astro` records the full finding.
+- **A `{/* */}` comment inside an attribute list swallows the template.**
+  Putting one between a component's props parses as an expression attribute
+  and consumes the rest of the file. It surfaces as "declared but never read"
+  for every import, which points at the imports rather than the comment. Put
+  the comment in the frontmatter.
 - **Keep angle-bracket tag names out of `.astro` frontmatter comments.** Writing `<section>` in a JSDoc block there can panic the `.astro` to TSX transform (`slice bounds out of range`), after which every importing file reports "is not a module". Write "a section element" instead.
 - **Import Zod from `astro/zod`,** never a separate `zod` install — two copies break `defineCollection`.
 - **TypeScript stays on 6.0.x.** `@astrojs/check` and typescript-eslint both reject TS 7 today.

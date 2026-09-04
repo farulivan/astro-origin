@@ -6,7 +6,12 @@
  * else's.
  */
 import { siteConfig } from "@/config/site"
-import { DEFAULT_LOCALE, LOCALE_TAGS, type Locale } from "@/content/schemas"
+import {
+  DEFAULT_LOCALE,
+  LOCALE_TAGS,
+  LOCALES,
+  type Locale,
+} from "@/content/schemas"
 import { localizePath } from "@/i18n/utils"
 
 interface Props {
@@ -33,7 +38,9 @@ const {
   description,
   lang,
   path,
-  availableLocales = [DEFAULT_LOCALE, "id"] as const,
+  // Derived, never listed. A hardcoded pair here meant adding a third locale
+  // silently dropped it from hreflang on every page that is not a post.
+  availableLocales = LOCALES,
   image = siteConfig.ogImage,
   type = "website",
   publishedTime,

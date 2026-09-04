@@ -15,15 +15,22 @@ interface Props {
   lang: Locale
   /** Locale-less path, e.g. "/blog/my-post". Drives canonical + hreflang. */
   path: string
+  /**
+   * Where the language picker should point, when it is not this page. Tag
+   * pages use it: their slug is authored per locale, so the same tag has no
+   * address in another language.
+   */
+  switchPath?: string
   availableLocales?: readonly Locale[]
   image?: string
   type?: "website" | "article"
   publishedTime?: Date
   modifiedTime?: Date
   tags?: readonly string[]
+  noindex?: boolean
 }
 
-const { lang, path, ...seo } = Astro.props
+const { lang, path, switchPath, ...seo } = Astro.props
 const t = useTranslations(lang)
 ---
 
@@ -108,7 +115,7 @@ const t = useTranslations(lang)
       {t("a11y.skipToContent")}
     </a>
 
-    <Header lang={lang} path={path} />
+    <Header lang={lang} path={path} switchPath={switchPath} />
 
     <main id="main">
       <slot />

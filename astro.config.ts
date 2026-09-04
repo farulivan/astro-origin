@@ -3,7 +3,7 @@ import mdx from "@astrojs/mdx"
 import react from "@astrojs/react"
 import sitemap from "@astrojs/sitemap"
 import tailwindcss from "@tailwindcss/vite"
-import { defineConfig, envField, fontProviders } from "astro/config"
+import { defineConfig, fontProviders } from "astro/config"
 import { visualizer } from "rollup-plugin-visualizer"
 
 import { LOCALE_TAGS } from "./src/content/schemas"
@@ -96,16 +96,6 @@ export default defineConfig({
         externalLinksPlugin,
       ],
     }),
-  },
-
-  env: {
-    schema: {
-      PUBLIC_ANALYTICS_ID: envField.string({
-        context: "client",
-        access: "public",
-        optional: true,
-      }),
-    },
   },
 
   vite: {

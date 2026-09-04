@@ -1,0 +1,73 @@
+---
+import type { InferGetStaticPropsType } from "astro"
+
+import PostList from "@/components/sections/PostList.astro"
+import Button from "@/components/ui/Button.astro"
+import Icon from "@/components/ui/Icon.astro"
+import Section from "@/components/ui/Section.astro"
+import { getPostListItemsByTag, getTags } from "@/content/queries"
+import { LOCALES } from "@/content/schemas"
+import { langParam, localizePath, useTranslations } from "@/i18n/utils"
+import BaseLayout from "@/layouts/BaseLayout.astro"
+
+/**
+ * `blog/tag/` is a static segment, so it outranks `blog/[slug]` the same way
+ * `blog/page/` already does — no route collision with a post called "tag".
+ */
+export async function getStaticPaths() {
+  const paths = []
+  for (const lang of LOCALES) {
+    for (const tag of await getTags(lang)) {
+      paths.push({
+        params: { lang: langParam(lang), tag: tag.slug },
+        props: { lang, tag },
+      })
+    }
+  }
+  return paths
+}
+
+type Props = InferGetStaticPropsType<typeof getStaticPaths>
+
+const { lang, tag } = Astro.props
+const t = useTranslations(lang)
+
+/*
+ * Tags are authored per locale, so this page has no equivalent in the others.
+ * hreflang therefore lists only this locale, and the language picker is sent
+ * to the blog index rather than to a URL that would not exist.
+ */
+const posts = await getPostListItemsByTag(lang, tag.slug)
+const title = t("blog.taggedWith", { tag: tag.label })
+---
+
+<BaseLayout
+  lang={lang}
+  path={`/blog/tag/${tag.slug}`}
+  {title}
+  description={t("blog.subtitle")}
+  availableLocales={[lang]}
+  switchPath="/blog"
+>
+  <Section label={t("waypoint.explore")} origin>
+    <header class="mb-10 max-w-2xl">
+      <h1 class="text-4xl font-semibold tracking-[-0.03em]">{title}</h1>
+      <Button
+        href={localizePath("/blog", lang)}
+        variant="ghost"
+        size="sm"
+        class="text-muted-foreground mt-4 -ml-3"
+      >
+        <Icon name="chevronLeft" class="size-4" />
+        {t("blog.allPosts")}
+      </Button>
+    </header>
+
+    <PostList
+      {lang}
+      {posts}
+      hrefFor={(slug) => localizePath(`/blog/${slug}`, lang)}
+      tagHrefFor={(slug) => localizePath(`/blog/tag/${slug}`, lang)}
+    />
+  </Section>
+</BaseLayout>

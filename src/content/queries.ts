@@ -12,6 +12,8 @@
  */
 import { getCollection, render, type CollectionEntry } from "astro:content"
 
+import { slugify } from "@/lib/slugify"
+
 import { DEFAULT_LOCALE, LOCALES, type Locale } from "./schemas"
 
 export type PostEntry = CollectionEntry<"blog">
@@ -128,5 +130,50 @@ export async function getPostListItems(lang: Locale): Promise<PostListItem[]> {
         tags: entry.data.tags,
       }
     })
+  )
+}
+
+/** A tag as it appears in one locale, with the route it addresses. */
+export interface TagSummary {
+  /** As authored, for display. */
+  label: string
+  /** URL-safe form. */
+  slug: string
+  count: number
+}
+
+/**
+ * Tags are authored per locale, so a tag has no cross-locale identity: the
+ * English post carries "deployment" and the Indonesian one "penerapan". That
+ * is why tag routes are generated per locale and why the language picker on a
+ * tag page falls back to the blog index rather than switching to a URL that
+ * would not exist.
+ */
+export async function getTags(lang: Locale): Promise<TagSummary[]> {
+  const posts = await getPosts(lang)
+
+  const bySlug = new Map<string, TagSummary>()
+  for (const { entry } of posts) {
+    for (const label of entry.data.tags) {
+      const slug = slugify(label)
+      const seen = bySlug.get(slug)
+      if (seen) seen.count += 1
+      else bySlug.set(slug, { label, slug, count: 1 })
+    }
+  }
+
+  return [...bySlug.values()].sort(
+    (a, b) => b.count - a.count || a.label.localeCompare(b.label)
+  )
+}
+
+/** The blog list, narrowed to one tag. */
+export async function getPostListItemsByTag(
+  lang: Locale,
+  tagSlug: string
+): Promise<PostListItem[]> {
+  const items = await getPostListItems(lang)
+  return items.filter((item) =>
+    item.tags.some((tag) => slugify(tag) === tagSlug)
   )
 }

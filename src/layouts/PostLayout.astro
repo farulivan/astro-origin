@@ -9,6 +9,7 @@ import type { Locale } from "@/content/schemas"
 import { localizePath, useTranslations } from "@/i18n/utils"
 import BaseLayout from "@/layouts/BaseLayout.astro"
 import { formatDate, resolvePostDate, toDateAttribute } from "@/lib/format"
+import { slugify } from "@/lib/slugify"
 
 interface Props {
   lang: Locale
@@ -116,7 +117,14 @@ const displayed = resolvePostDate({ pubDate, updatedDate, lastModified })
           tags.length > 0 && (
             <ul class="text-muted-foreground mt-4 flex flex-wrap gap-x-3 font-mono text-xs tracking-[0.08em] uppercase">
               {tags.map((tag) => (
-                <li>{tag}</li>
+                <li>
+                  <a
+                    href={localizePath(`/blog/tag/${slugify(tag)}`, lang)}
+                    class="hover:text-foreground transition-colors"
+                  >
+                    {tag}
+                  </a>
+                </li>
               ))}
             </ul>
           )
