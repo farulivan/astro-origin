@@ -7,7 +7,9 @@
 [![Astro 7](https://img.shields.io/badge/Astro-7-ff5d01.svg)](https://astro.build)
 [![Lighthouse 100](https://img.shields.io/badge/Lighthouse-100%2F100%2F100%2F100-brightgreen.svg)](#measured)
 
-![The landing page in light and dark](./docs/screenshot.png)
+[![The landing page in light and dark](./docs/screenshot.png)](https://astro-origin.farulivan.com)
+
+**[See it live →](https://astro-origin.farulivan.com)**
 
 ```bash
 npm create astro@latest -- --template farulivan/astro-origin

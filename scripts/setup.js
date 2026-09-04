@@ -21,7 +21,7 @@ const DRY_RUN = argv.includes("--dry-run")
 /** The identity this template ships with. */
 const PLACEHOLDER = {
   name: "Origin",
-  url: "https://example.com",
+  url: "https://astro-origin.farulivan.com",
   repo: "farulivan/astro-origin",
   pkg: "astro-origin",
   handle: "astro_origin",
@@ -149,12 +149,6 @@ async function main() {
   )
 
   touch(
-    await edit("public/robots.txt", (s, f) =>
-      replaceAll(s, PLACEHOLDER.url, url, f)
-    )
-  )
-
-  touch(
     await edit("public/site.webmanifest", (s, f) => {
       s = replaceAll(s, `"name": "${PLACEHOLDER.name}"`, `"name": "${name}"`, f)
       return replaceAll(
@@ -176,7 +170,9 @@ async function main() {
   touch(
     await edit("README.md", (s, f) => {
       s = replaceAll(s, `# ${PLACEHOLDER.pkg}\n`, `# ${name}\n`, f)
-      return s.split(PLACEHOLDER.repo).join(repo)
+      s = s.split(PLACEHOLDER.repo).join(repo)
+      // Including the demo link, so a fork does not advertise this one.
+      return s.split(PLACEHOLDER.url).join(url)
     })
   )
 

@@ -12,10 +12,10 @@ export const siteConfig = {
   name: "Origin",
   /**
    * Canonical origin, no trailing slash. Also set as `site` in
-   * astro.config.mjs, which is what makes canonical URLs, the sitemap and
-   * RSS absolute.
+   * astro.config.ts, which is what makes canonical URLs, the sitemap, RSS
+   * and robots.txt absolute. `pnpm setup` rewrites both.
    */
-  url: "https://example.com",
+  url: "https://astro-origin.farulivan.com",
   /** Fallback Open Graph image, served from public/. */
   ogImage: "/og-default.png",
   /**
