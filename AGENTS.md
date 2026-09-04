@@ -6,6 +6,7 @@ Read [docs/ARCHITECTURE.md](./docs/ARCHITECTURE.md) before making structural cha
 
 ```bash
 pnpm dev         # dev server
+pnpm setup       # rewrite the placeholder identity as your own
 pnpm verify      # everything CI runs
 pnpm check       # astro check on its own
 pnpm check:arch  # just the layering rules
@@ -34,6 +35,20 @@ When starting the dev server for a long-running task, use `astro dev --backgroun
 - **TypeScript stays on 6.0.x.** `@astrojs/check` and typescript-eslint both reject TS 7 today.
 - **The theme script in `BaseLayout.astro` must stay inline and blocking.** Deferring it causes a flash of the wrong theme.
 - **Adding a string?** Add it to `en` in `src/i18n/ui.ts` first; typecheck will then demand the Indonesian one.
+
+- **Tailwind v4 registers `prose` as a utility.** Typography's
+  `.prose :where(pre)` therefore lands in the utilities layer and outranks
+  anything in `@layer components`, no matter how specific — `:where()`
+  contributes no specificity, so a bare `.astro-code` ties and loses on
+  source order. The Shiki rules in `global.css` sit outside every layer for
+  exactly this reason. Check the cascade layer before adding specificity.
+- **The Lighthouse budget asserts accessibility at exactly 1.00**, and it
+  audits every page the build produces, in both locales. One token colour in
+  one code block is enough to fail it: `github-light`'s comment is #6A737D on
+  white, which is 4.4:1. Use the `-high-contrast` Shiki themes.
+- **Preload every font that sets real text.** Geist Mono sets dates, tags and
+  waypoints on every page; leaving it out of the preload cost 0.137 CLS on
+  post pages.
 
 ## Behavior traps (all previously shipped as bugs)
 

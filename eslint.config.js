@@ -34,9 +34,11 @@ export default defineConfig([
     ...jsxA11y.flatConfigs.recommended,
   },
 
-  // Node context: config files and the build-time Sätteri plugins.
+  // Node context: config files, the build-time Sätteri plugins, and the
+  // setup script. The script is .js rather than .mjs so that this glob and
+  // the main TS/JS block both see it.
   {
-    files: ["*.config.{js,mjs,ts}", "src/mdast/**/*.ts"],
+    files: ["*.config.{js,mjs,ts}", "src/mdast/**/*.ts", "scripts/**/*.js"],
     languageOptions: { globals: globals.node },
   },
 ])

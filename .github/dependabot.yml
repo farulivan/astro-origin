@@ -1,0 +1,21 @@
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+    # One pull request a week rather than fifteen.
+    groups:
+      all-dependencies:
+        patterns: ["*"]
+    ignore:
+      # TypeScript is pinned to 6.0.x deliberately: @astrojs/check supports
+      # ^5 || ^6 and typescript-eslint declares <6.1.0, so TS 7 satisfies
+      # neither. See AGENTS.md.
+      - dependency-name: typescript
+        update-types: ["version-update:semver-major"]
+
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly

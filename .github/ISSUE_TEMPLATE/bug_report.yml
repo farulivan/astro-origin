@@ -1,0 +1,26 @@
+name: Bug report
+description: Something in the template does not work
+labels: [bug]
+body:
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened
+      description: And what you expected instead.
+    validations:
+      required: true
+  - type: textarea
+    id: repro
+    attributes:
+      label: How to reproduce
+      description: The smallest set of steps that shows it. A link to a repository is ideal.
+    validations:
+      required: true
+  - type: input
+    id: versions
+    attributes:
+      label: Versions
+      description: Output of `node -v`, `pnpm -v`, and the `astro` version from package.json.
+      placeholder: node v22.12.0, pnpm 11.25.0, astro 7.2.10
+    validations:
+      required: true

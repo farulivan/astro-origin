@@ -1,0 +1,8 @@
+# Mirrors vercel.json, so the "Deploy to Netlify" button produces the same
+# build as the one CI checks.
+[build]
+  command = "pnpm build"
+  publish = "dist"
+
+[build.environment]
+  NODE_VERSION = "22"
