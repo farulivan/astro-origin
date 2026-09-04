@@ -2,9 +2,9 @@
 /**
  * Rewrites the template's placeholder identity as your own.
  *
- * The name, the origin and the repository appear in six files. Leaving people
+ * The name, the origin and the repository appear in five files. Leaving people
  * to grep for them is how a template ships to production still calling itself
- * Origin and pointing its sitemap at example.com.
+ * Origin and pointing its sitemap at someone else's domain.
  *
  * Node rather than a shell script on purpose: `sed -i` takes an argument on
  * BSD that it rejects on GNU, and neither exists on Windows. Node 22 has
@@ -62,21 +62,45 @@ function assertCleanTree() {
   }
 }
 
-/** Replace every occurrence, and fail loudly if there were none. */
+/** Replace every occurrence, and complain if there were none. */
 function replaceAll(source, from, to, where) {
   if (from === to) return source
   if (!source.includes(from)) {
-    die(`Expected to find ${JSON.stringify(from)} in ${where} and did not.`)
+    throw new Error(`expected to find ${JSON.stringify(from)} in ${where}`)
   }
   return source.split(from).join(to)
 }
 
-async function edit(file, fn) {
+/**
+ * Every file is read and transformed before any of them is written.
+ *
+ * Writing as it went meant one missing anchor could leave a project half
+ * converted — three files rewritten, two not — which is worse than not running
+ * at all. `create-astro` renames package.json for you, which is exactly how
+ * that failure was found.
+ */
+const staged = []
+const problems = []
+
+async function stage(file, transform) {
   const before = await readFile(file, "utf8")
-  const after = fn(before, file)
-  if (before === after) return null
-  if (!DRY_RUN) await writeFile(file, after)
-  return file
+  try {
+    const after = transform(before, file)
+    if (before !== after) staged.push({ file, after })
+  } catch (error) {
+    problems.push(error instanceof Error ? error.message : String(error))
+  }
+}
+
+async function commit() {
+  if (problems.length > 0) {
+    die(
+      `Nothing was written. ${problems.length} check${problems.length === 1 ? "" : "s"} failed:\n` +
+        problems.map((p) => `    - ${p}`).join("\n")
+    )
+  }
+  if (DRY_RUN) return
+  for (const { file, after } of staged) await writeFile(file, after)
 }
 
 async function main() {
@@ -116,70 +140,64 @@ async function main() {
   const pkg = repo.split("/")[1]
   const storageKey = `${slug(name)}.theme`
 
-  const changed = []
-  const touch = (file) => file && changed.push(file)
+  await stage("astro.config.ts", (s, f) =>
+    replaceAll(s, `site: "${PLACEHOLDER.url}"`, `site: "${url}"`, f)
+  )
 
-  touch(
-    await edit("astro.config.ts", (s, f) =>
-      replaceAll(s, `site: "${PLACEHOLDER.url}"`, `site: "${url}"`, f)
+  await stage("src/config/site.ts", (s, f) => {
+    s = replaceAll(s, `name: "${PLACEHOLDER.name}"`, `name: "${name}"`, f)
+    s = replaceAll(s, `url: "${PLACEHOLDER.url}"`, `url: "${url}"`, f)
+    s = replaceAll(
+      s,
+      `themeStorageKey: "${PLACEHOLDER.storageKey}"`,
+      `themeStorageKey: "${storageKey}"`,
+      f
     )
-  )
+    s = replaceAll(
+      s,
+      `twitterHandle: "${PLACEHOLDER.handle}"`,
+      `twitterHandle: "${handle}"`,
+      f
+    )
+    // Social placeholders point at "/#" on purpose; only fill what we know.
+    s = s.replace(/github: "\/#"/, `github: "https://github.com/${repo}"`)
+    if (handle) s = s.replace(/x: "\/#"/, `x: "https://x.com/${handle}"`)
+    return s
+  })
 
-  touch(
-    await edit("src/config/site.ts", (s, f) => {
-      s = replaceAll(s, `name: "${PLACEHOLDER.name}"`, `name: "${name}"`, f)
-      s = replaceAll(s, `url: "${PLACEHOLDER.url}"`, `url: "${url}"`, f)
-      s = replaceAll(
-        s,
-        `themeStorageKey: "${PLACEHOLDER.storageKey}"`,
-        `themeStorageKey: "${storageKey}"`,
-        f
-      )
-      s = replaceAll(
-        s,
-        `twitterHandle: "${PLACEHOLDER.handle}"`,
-        `twitterHandle: "${handle}"`,
-        f
-      )
-      // Placeholders point at "/#" on purpose; only fill what we know.
-      s = s.replace(/github: "\/#"/, `github: "https://github.com/${repo}"`)
-      if (handle) s = s.replace(/x: "\/#"/, `x: "https://x.com/${handle}"`)
-      return s
-    })
-  )
+  await stage("public/site.webmanifest", (s, f) => {
+    s = replaceAll(s, `"name": "${PLACEHOLDER.name}"`, `"name": "${name}"`, f)
+    return replaceAll(
+      s,
+      `"short_name": "${PLACEHOLDER.name}"`,
+      `"short_name": "${name}"`,
+      f
+    )
+  })
 
-  touch(
-    await edit("public/site.webmanifest", (s, f) => {
-      s = replaceAll(s, `"name": "${PLACEHOLDER.name}"`, `"name": "${name}"`, f)
-      return replaceAll(
-        s,
-        `"short_name": "${PLACEHOLDER.name}"`,
-        `"short_name": "${name}"`,
-        f
-      )
-    })
-  )
+  await stage("package.json", (s) => {
+    // Not anchored on the shipped name: `create-astro` sets it to whatever
+    // directory you scaffolded into, so by the time this runs it is already
+    // something else.
+    s = s.replace(/"name": "[^"]*"/, `"name": "${pkg}"`)
+    s = s.split(PLACEHOLDER.repo).join(repo)
+    return s.split(PLACEHOLDER.url).join(url)
+  })
 
-  touch(
-    await edit("package.json", (s, f) => {
-      s = replaceAll(s, `"name": "${PLACEHOLDER.pkg}"`, `"name": "${pkg}"`, f)
-      return s.split(PLACEHOLDER.repo).join(repo)
-    })
-  )
+  await stage("README.md", (s) => {
+    s = s.replace(/^# .*$/m, `# ${name}`)
+    s = s.split(PLACEHOLDER.repo).join(repo)
+    // Including the demo link, so a fork does not advertise this one.
+    return s.split(PLACEHOLDER.url).join(url)
+  })
 
-  touch(
-    await edit("README.md", (s, f) => {
-      s = replaceAll(s, `# ${PLACEHOLDER.pkg}\n`, `# ${name}\n`, f)
-      s = s.split(PLACEHOLDER.repo).join(repo)
-      // Including the demo link, so a fork does not advertise this one.
-      return s.split(PLACEHOLDER.url).join(url)
-    })
-  )
+  await commit()
 
+  const count = staged.length
   console.log(
-    `\n  ${DRY_RUN ? "Would update" : "Updated"} ${changed.length} file${changed.length === 1 ? "" : "s"}:`
+    `\n  ${DRY_RUN ? "Would update" : "Updated"} ${count} file${count === 1 ? "" : "s"}:`
   )
-  for (const file of changed) console.log(`    ${file}`)
+  for (const { file } of staged) console.log(`    ${file}`)
 
   if (DRY_RUN) {
     console.log("\n  Dry run — nothing was written.\n")
