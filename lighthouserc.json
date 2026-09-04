@@ -2,10 +2,11 @@
   "ci": {
     "collect": {
       "staticDistDir": "./dist",
-      "numberOfRuns": 1,
+      "numberOfRuns": 3,
       "maxAutodiscoverUrls": 0
     },
     "assert": {
+      "aggregationMethod": "median-run",
       "assertions": {
         "categories:performance": [
           "error",

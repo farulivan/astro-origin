@@ -86,6 +86,10 @@ jobs:
       - name: Build
         run: pnpm build:fast
 
+      # Three runs, median taken. With one run the first URL audited
+      # absorbs Chrome's cold start on a shared runner — that alone put
+      # 749ms of total blocking time on a page that ships no JavaScript,
+      # and failed a budget every other page passed.
       - name: Lighthouse budget
         run: pnpm dlx @lhci/cli@0.15.1 autorun
 
